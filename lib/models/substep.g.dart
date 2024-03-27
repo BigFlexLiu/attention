@@ -1,18 +1,19 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 
-part of 'steps.dart';
+part of 'substep.dart';
 
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
 
-_$StepsImpl _$$StepsImplFromJson(Map<String, dynamic> json) => _$StepsImpl(
+_$SubstepImpl _$$SubstepImplFromJson(Map<String, dynamic> json) =>
+    _$SubstepImpl(
       title: json['title'] as String,
-      description: json['description'] as String,
+      isCompleted: json['isCompleted'] as bool,
     );
 
-Map<String, dynamic> _$$StepsImplToJson(_$StepsImpl instance) =>
+Map<String, dynamic> _$$SubstepImplToJson(_$SubstepImpl instance) =>
     <String, dynamic>{
       'title': instance.title,
-      'description': instance.description,
+      'isCompleted': instance.isCompleted,
     };

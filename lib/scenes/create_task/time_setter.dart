@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:provider/provider.dart';
 
-import '../provider/task_provider.dart';
+import '../../provider/task_provider.dart';
 
 /// Flutter code sample for [CupertinoTimerPicker].
 

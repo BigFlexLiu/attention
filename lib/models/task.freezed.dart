@@ -23,12 +23,13 @@ mixin _$Task {
   String get title => throw _privateConstructorUsedError;
   Duration? get duration => throw _privateConstructorUsedError;
   DateTime? get startTime => throw _privateConstructorUsedError;
-  List<String> get steps => throw _privateConstructorUsedError;
+  List<Substep> get steps => throw _privateConstructorUsedError;
   String get personalImportance => throw _privateConstructorUsedError;
   List<ProblemSolution> get problemSolutions =>
       throw _privateConstructorUsedError;
   String get reward => throw _privateConstructorUsedError;
   bool get completed => throw _privateConstructorUsedError;
+  String get Reflection => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -44,11 +45,12 @@ abstract class $TaskCopyWith<$Res> {
       {String title,
       Duration? duration,
       DateTime? startTime,
-      List<String> steps,
+      List<Substep> steps,
       String personalImportance,
       List<ProblemSolution> problemSolutions,
       String reward,
-      bool completed});
+      bool completed,
+      String Reflection});
 }
 
 /// @nodoc
@@ -72,6 +74,7 @@ class _$TaskCopyWithImpl<$Res, $Val extends Task>
     Object? problemSolutions = null,
     Object? reward = null,
     Object? completed = null,
+    Object? Reflection = null,
   }) {
     return _then(_value.copyWith(
       title: null == title
@@ -89,7 +92,7 @@ class _$TaskCopyWithImpl<$Res, $Val extends Task>
       steps: null == steps
           ? _value.steps
           : steps // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as List<Substep>,
       personalImportance: null == personalImportance
           ? _value.personalImportance
           : personalImportance // ignore: cast_nullable_to_non_nullable
@@ -106,6 +109,10 @@ class _$TaskCopyWithImpl<$Res, $Val extends Task>
           ? _value.completed
           : completed // ignore: cast_nullable_to_non_nullable
               as bool,
+      Reflection: null == Reflection
+          ? _value.Reflection
+          : Reflection // ignore: cast_nullable_to_non_nullable
+              as String,
     ) as $Val);
   }
 }
@@ -121,11 +128,12 @@ abstract class _$$TaskImplCopyWith<$Res> implements $TaskCopyWith<$Res> {
       {String title,
       Duration? duration,
       DateTime? startTime,
-      List<String> steps,
+      List<Substep> steps,
       String personalImportance,
       List<ProblemSolution> problemSolutions,
       String reward,
-      bool completed});
+      bool completed,
+      String Reflection});
 }
 
 /// @nodoc
@@ -146,6 +154,7 @@ class __$$TaskImplCopyWithImpl<$Res>
     Object? problemSolutions = null,
     Object? reward = null,
     Object? completed = null,
+    Object? Reflection = null,
   }) {
     return _then(_$TaskImpl(
       title: null == title
@@ -163,7 +172,7 @@ class __$$TaskImplCopyWithImpl<$Res>
       steps: null == steps
           ? _value._steps
           : steps // ignore: cast_nullable_to_non_nullable
-              as List<String>,
+              as List<Substep>,
       personalImportance: null == personalImportance
           ? _value.personalImportance
           : personalImportance // ignore: cast_nullable_to_non_nullable
@@ -180,6 +189,10 @@ class __$$TaskImplCopyWithImpl<$Res>
           ? _value.completed
           : completed // ignore: cast_nullable_to_non_nullable
               as bool,
+      Reflection: null == Reflection
+          ? _value.Reflection
+          : Reflection // ignore: cast_nullable_to_non_nullable
+              as String,
     ));
   }
 }
@@ -191,11 +204,12 @@ class _$TaskImpl with DiagnosticableTreeMixin implements _Task {
       {required this.title,
       required this.duration,
       required this.startTime,
-      required final List<String> steps,
+      required final List<Substep> steps,
       required this.personalImportance,
       required final List<ProblemSolution> problemSolutions,
       required this.reward,
-      required this.completed})
+      required this.completed,
+      required this.Reflection})
       : _steps = steps,
         _problemSolutions = problemSolutions;
 
@@ -208,9 +222,9 @@ class _$TaskImpl with DiagnosticableTreeMixin implements _Task {
   final Duration? duration;
   @override
   final DateTime? startTime;
-  final List<String> _steps;
+  final List<Substep> _steps;
   @override
-  List<String> get steps {
+  List<Substep> get steps {
     if (_steps is EqualUnmodifiableListView) return _steps;
     // ignore: implicit_dynamic_type
     return EqualUnmodifiableListView(_steps);
@@ -231,10 +245,12 @@ class _$TaskImpl with DiagnosticableTreeMixin implements _Task {
   final String reward;
   @override
   final bool completed;
+  @override
+  final String Reflection;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'Task(title: $title, duration: $duration, startTime: $startTime, steps: $steps, personalImportance: $personalImportance, problemSolutions: $problemSolutions, reward: $reward, completed: $completed)';
+    return 'Task(title: $title, duration: $duration, startTime: $startTime, steps: $steps, personalImportance: $personalImportance, problemSolutions: $problemSolutions, reward: $reward, completed: $completed, Reflection: $Reflection)';
   }
 
   @override
@@ -249,7 +265,8 @@ class _$TaskImpl with DiagnosticableTreeMixin implements _Task {
       ..add(DiagnosticsProperty('personalImportance', personalImportance))
       ..add(DiagnosticsProperty('problemSolutions', problemSolutions))
       ..add(DiagnosticsProperty('reward', reward))
-      ..add(DiagnosticsProperty('completed', completed));
+      ..add(DiagnosticsProperty('completed', completed))
+      ..add(DiagnosticsProperty('Reflection', Reflection));
   }
 
   @override
@@ -269,7 +286,9 @@ class _$TaskImpl with DiagnosticableTreeMixin implements _Task {
                 .equals(other._problemSolutions, _problemSolutions) &&
             (identical(other.reward, reward) || other.reward == reward) &&
             (identical(other.completed, completed) ||
-                other.completed == completed));
+                other.completed == completed) &&
+            (identical(other.Reflection, Reflection) ||
+                other.Reflection == Reflection));
   }
 
   @JsonKey(ignore: true)
@@ -283,7 +302,8 @@ class _$TaskImpl with DiagnosticableTreeMixin implements _Task {
       personalImportance,
       const DeepCollectionEquality().hash(_problemSolutions),
       reward,
-      completed);
+      completed,
+      Reflection);
 
   @JsonKey(ignore: true)
   @override
@@ -304,11 +324,12 @@ abstract class _Task implements Task {
       {required final String title,
       required final Duration? duration,
       required final DateTime? startTime,
-      required final List<String> steps,
+      required final List<Substep> steps,
       required final String personalImportance,
       required final List<ProblemSolution> problemSolutions,
       required final String reward,
-      required final bool completed}) = _$TaskImpl;
+      required final bool completed,
+      required final String Reflection}) = _$TaskImpl;
 
   factory _Task.fromJson(Map<String, dynamic> json) = _$TaskImpl.fromJson;
 
@@ -319,7 +340,7 @@ abstract class _Task implements Task {
   @override
   DateTime? get startTime;
   @override
-  List<String> get steps;
+  List<Substep> get steps;
   @override
   String get personalImportance;
   @override
@@ -328,6 +349,8 @@ abstract class _Task implements Task {
   String get reward;
   @override
   bool get completed;
+  @override
+  String get Reflection;
   @override
   @JsonKey(ignore: true)
   _$$TaskImplCopyWith<_$TaskImpl> get copyWith =>

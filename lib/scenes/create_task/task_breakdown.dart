@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../provider/task_provider.dart';
+import '../../models/substep.dart';
+import '../../provider/task_provider.dart';
 
 class TaskBreakdown extends StatefulWidget {
   const TaskBreakdown({super.key});
@@ -11,7 +12,11 @@ class TaskBreakdown extends StatefulWidget {
 }
 
 class _TaskBreakdownState extends State<TaskBreakdown> {
-  final List<String> _items = ['Item 1', 'Item 2', 'Item 3'];
+  final List<Substep> _items = [
+    const Substep(title: "Item 1", isCompleted: false),
+    const Substep(title: "Item 2", isCompleted: false),
+    const Substep(title: "Item 3", isCompleted: false),
+  ];
   final TextEditingController _textController = TextEditingController();
 
   @override
@@ -36,7 +41,8 @@ class _TaskBreakdownState extends State<TaskBreakdown> {
                 icon: const Icon(Icons.add),
                 onPressed: () {
                   setState(() {
-                    _items.add(_textController.text);
+                    _items.add(Substep(
+                        title: _textController.text, isCompleted: false));
                     Provider.of<TaskProvider>(context, listen: false)
                         .setTaskSteps(_items);
                     _textController.clear();
@@ -53,8 +59,8 @@ class _TaskBreakdownState extends State<TaskBreakdown> {
                       tileColor: _items.indexOf(item).isOdd
                           ? oddItemColor
                           : evenItemColor,
-                      key: Key(item),
-                      title: Text(item),
+                      key: Key(item.title),
+                      title: Text(item.title),
                       trailing: IconButton(
                         icon: const Icon(Icons.remove),
                         onPressed: () {
@@ -73,8 +79,10 @@ class _TaskBreakdownState extends State<TaskBreakdown> {
                 if (newIndex > oldIndex) {
                   newIndex -= 1;
                 }
-                final String item = _items.removeAt(oldIndex);
+                final Substep item = _items.removeAt(oldIndex);
                 _items.insert(newIndex, item);
+                Provider.of<TaskProvider>(context, listen: false)
+                    .setTaskSteps(_items);
               });
             },
           ),

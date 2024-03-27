@@ -14,13 +14,16 @@ _$TaskImpl _$$TaskImplFromJson(Map<String, dynamic> json) => _$TaskImpl(
       startTime: json['startTime'] == null
           ? null
           : DateTime.parse(json['startTime'] as String),
-      steps: (json['steps'] as List<dynamic>).map((e) => e as String).toList(),
+      steps: (json['steps'] as List<dynamic>)
+          .map((e) => Substep.fromJson(e as Map<String, dynamic>))
+          .toList(),
       personalImportance: json['personalImportance'] as String,
       problemSolutions: (json['problemSolutions'] as List<dynamic>)
           .map((e) => ProblemSolution.fromJson(e as Map<String, dynamic>))
           .toList(),
       reward: json['reward'] as String,
       completed: json['completed'] as bool,
+      Reflection: json['Reflection'] as String,
     );
 
 Map<String, dynamic> _$$TaskImplToJson(_$TaskImpl instance) =>
@@ -33,4 +36,5 @@ Map<String, dynamic> _$$TaskImplToJson(_$TaskImpl instance) =>
       'problemSolutions': instance.problemSolutions,
       'reward': instance.reward,
       'completed': instance.completed,
+      'Reflection': instance.Reflection,
     };

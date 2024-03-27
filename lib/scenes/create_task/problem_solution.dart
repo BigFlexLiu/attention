@@ -1,16 +1,14 @@
+import 'package:attention/models/problem_solution.dart';
+import 'package:attention/provider/task_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
-import '../provider/problem_solution_provider.dart';
 
 class ProblemSolutions extends StatelessWidget {
   const ProblemSolutions({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-        create: (_) => ProblemSolutionProvider(),
-        builder: (context, child) => const ProblemSolutionList());
+    return const ProblemSolutionList();
   }
 }
 
@@ -24,18 +22,15 @@ class ProblemSolutionList extends StatefulWidget {
 class _ProblemSolutionListState extends State<ProblemSolutionList> {
   @override
   Widget build(BuildContext context) {
+    // final problemSolutions =
+    //     Provider.of<ProblemSolutionProvider>(context).problemSolutions;
     final problemSolutions =
-        Provider.of<ProblemSolutionProvider>(context).problemSolutions;
+        Provider.of<TaskProvider>(context).task.problemSolutions;
     return ListView(
       children: [
         for (int i = 0; i < problemSolutions.length; i++)
           ProblemSolutionCard(problemSolutions[i]),
-        ProblemSolutionCreator((ProblemSolutionModel problemSolution) {
-          setState(() {
-            Provider.of<ProblemSolutionProvider>(context, listen: false)
-                .addProblemSolution(problemSolution);
-          });
-        }),
+        const ProblemSolutionCreator()
       ],
     );
   }
@@ -43,7 +38,7 @@ class _ProblemSolutionListState extends State<ProblemSolutionList> {
 
 class ProblemSolutionCard extends StatefulWidget {
   const ProblemSolutionCard(this.problemSolution, {super.key});
-  final ProblemSolutionModel problemSolution;
+  final ProblemSolution problemSolution;
   @override
   State<ProblemSolutionCard> createState() => _ProblemSolutionCardState();
 }
@@ -84,7 +79,7 @@ class _ProblemSolutionCardState extends State<ProblemSolutionCard> {
                 child: const Text('Delete'),
                 onPressed: () {
                   setState(() {
-                    Provider.of<ProblemSolutionProvider>(context, listen: false)
+                    Provider.of<TaskProvider>(context, listen: false)
                         .removeProblemSolution(widget.problemSolution);
                   });
                 },
@@ -99,8 +94,7 @@ class _ProblemSolutionCardState extends State<ProblemSolutionCard> {
 }
 
 class ProblemSolutionCreator extends StatefulWidget {
-  const ProblemSolutionCreator(this.onAddProblemSolution, {super.key});
-  final Function(ProblemSolutionModel) onAddProblemSolution;
+  const ProblemSolutionCreator({super.key});
 
   @override
   State<ProblemSolutionCreator> createState() => _ProblemSolutionCreatorState();
@@ -136,8 +130,10 @@ class _ProblemSolutionCreatorState extends State<ProblemSolutionCreator> {
               TextButton(
                 child: const Text('Add'),
                 onPressed: () {
-                  widget.onAddProblemSolution(ProblemSolutionModel(
-                      _problemController.text, _solutionController.text));
+                  Provider.of<TaskProvider>(context, listen: false)
+                      .addProblemSolution(ProblemSolution(
+                          problem: _problemController.text,
+                          solution: _solutionController.text));
                 },
               ),
               const SizedBox(width: 8),
@@ -152,7 +148,7 @@ class _ProblemSolutionCreatorState extends State<ProblemSolutionCreator> {
 class ProblemSolutionEdittor extends StatefulWidget {
   const ProblemSolutionEdittor(this.problemSolution, this.onCompleted,
       {super.key});
-  final ProblemSolutionModel problemSolution;
+  final ProblemSolution problemSolution;
   final VoidCallback onCompleted;
 
   @override
@@ -194,13 +190,21 @@ class _ProblemSolutionEdittorState extends State<ProblemSolutionEdittor> {
             ),
             Row(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
               TextButton(
-                child: const Text('Add'),
+                child: const Text('Done'),
                 onPressed: () {
-                  Provider.of<ProblemSolutionProvider>(context, listen: false)
+                  Provider.of<TaskProvider>(context, listen: false)
                       .updateProblemSolution(
                           widget.problemSolution,
-                          ProblemSolutionModel(_problemController.text,
-                              _solutionController.text));
+                          ProblemSolution(
+                              problem: _problemController.text,
+                              solution: _solutionController.text));
+                  widget.onCompleted();
+                },
+              ),
+              const SizedBox(width: 8),
+              TextButton(
+                child: const Text('Cancel'),
+                onPressed: () {
                   widget.onCompleted();
                 },
               ),

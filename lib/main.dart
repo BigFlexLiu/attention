@@ -1,5 +1,7 @@
 import 'package:attention/provider/task_provider.dart';
-import 'package:attention/scenes/next_task.dart';
+import 'package:attention/scenes/create_task/next_task.dart';
+import 'package:attention/scenes/current_task/ongoing_task.dart';
+import 'package:attention/scenes/reflection/reflection.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -62,6 +64,20 @@ class _MyHomePageState extends State<MyHomePage> {
               const Text(
                 'You have pushed the button this many times:',
               ),
+              OptionButton("temp", () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const OnGoingTask(),
+                  ),
+                );
+              }),
+              OptionButton("reflection", () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const Reflection(),
+                  ),
+                );
+              }),
             ])));
   }
 }

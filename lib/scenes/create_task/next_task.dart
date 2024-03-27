@@ -1,10 +1,11 @@
-import 'package:attention/scenes/problem_solution.dart';
-import 'package:attention/scenes/task_breakdown.dart';
-import 'package:attention/scenes/time_setter.dart';
+import 'package:attention/scenes/create_task/problem_solution.dart';
+import 'package:attention/scenes/create_task/task_breakdown.dart';
+import 'package:attention/scenes/create_task/time_setter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../provider/task_provider.dart';
+import '../../provider/task_provider.dart';
+import '../../theme.dart';
 
 class NextTask extends StatefulWidget {
   const NextTask({Key? key}) : super(key: key);
@@ -30,7 +31,7 @@ class _NextTaskState extends State<NextTask> {
                   .setTaskTitle(value);
             },
           ),
-          bgColor: Colors.indigo,
+          bgColor: taskComponentColors["title"]!,
         ),
         TaskQuestionModel(
           title: 'Bound',
@@ -39,7 +40,7 @@ class _NextTaskState extends State<NextTask> {
               "Keep in mind of how long you can focus for. 25 minutes is a good start.",
           imageUrl: 'https://i.ibb.co/LvmZypG/storefront-illustration-2.png',
           inputWidget: const TimeSetter(),
-          bgColor: const Color(0xff1eb090),
+          bgColor: taskComponentColors["time"]!,
         ),
         TaskQuestionModel(
           title: 'Steps',
@@ -47,7 +48,7 @@ class _NextTaskState extends State<NextTask> {
           hint: "Keep in mind of the ordering of the steps",
           imageUrl: 'https://i.ibb.co/420D7VP/building.png',
           inputWidget: const TaskBreakdown(),
-          bgColor: const Color(0xfffeae4f),
+          bgColor: taskComponentColors["steps"]!,
         ),
         TaskQuestionModel(
           title: 'Reflect',
@@ -63,7 +64,7 @@ class _NextTaskState extends State<NextTask> {
                   .setTaskPersonalImportance(value);
             },
           ),
-          bgColor: Colors.purple,
+          bgColor: taskComponentColors["personalImportance"]!,
         ),
         TaskQuestionModel(
           title: 'Prevent',
@@ -71,7 +72,7 @@ class _NextTaskState extends State<NextTask> {
           hint: "Anticipate and plan for the worst.",
           imageUrl: 'https://i.ibb.co/cJqsPSB/scooter.png',
           inputWidget: const ProblemSolutions(),
-          bgColor: Colors.purple,
+          bgColor: taskComponentColors["problemSolutions"]!,
         ),
         TaskQuestionModel(
           title: 'Promise',
@@ -87,7 +88,7 @@ class _NextTaskState extends State<NextTask> {
                   .setTaskReward(value);
             },
           ),
-          bgColor: Colors.purple,
+          bgColor: taskComponentColors["promise"]!,
         ),
       ]),
     );
