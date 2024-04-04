@@ -1,3 +1,4 @@
+import 'package:attention/io/io_functions.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../models/problem_solution.dart';
@@ -5,33 +6,63 @@ import '../models/substep.dart';
 import '../models/task.dart';
 
 class TaskProvider extends ChangeNotifier {
-  Task _task = Task.testsetup();
+  Task _task = Task.defaultsetup();
 
   Task get task => _task;
 
+  TaskProvider() {
+    readCurrentTask().then((task) {
+      if (task != null) {
+        _task = task;
+        saveChange();
+      }
+    });
+  }
+
+  Future<void> newTask() async {
+    int id = await readTaskIdCounter();
+    _task = Task.defaultsetup();
+    setTaskId(id);
+  }
+
   void setTask(Task task) {
     _task = task;
-    notifyListeners();
+    saveChange();
+  }
+
+  void resetTask() {
+    _task = _task.copyWith(startTime: null, completed: false, ended: false);
+    saveChange();
+  }
+
+  void setTaskId(int id) {
+    _task = _task.copyWith(id: id);
+    saveChange();
+  }
+
+  void setTaskParentId(int? parentId) {
+    _task = _task.copyWith(parentId: parentId);
+    saveChange();
   }
 
   void setTaskTitle(String title) {
     _task = _task.copyWith(title: title);
-    notifyListeners();
+    saveChange();
   }
 
   void setTaskTime(Duration? duration) {
     _task = _task.copyWith(duration: duration);
-    notifyListeners();
+    saveChange();
   }
 
   void setTaskStartTime(DateTime? startTime) {
     _task = _task.copyWith(startTime: startTime);
-    notifyListeners();
+    saveChange();
   }
 
   void setTaskSteps(List<Substep> steps) {
     _task = _task.copyWith(steps: steps);
-    notifyListeners();
+    saveChange();
   }
 
   void completeStep(Substep step) {
@@ -52,24 +83,25 @@ class TaskProvider extends ChangeNotifier {
 
   void setTaskPersonalImportance(String personalImportance) {
     _task = _task.copyWith(personalImportance: personalImportance);
-    notifyListeners();
+    saveChange();
   }
 
   void setTaskProblemSolutions(List<ProblemSolution> problemSolutions) {
     _task = _task.copyWith(problemSolutions: problemSolutions);
-    notifyListeners();
+    saveChange();
   }
 
   void addProblemSolution(ProblemSolution problemSolution) {
     _task = _task.copyWith(
         problemSolutions: _task.problemSolutions + [problemSolution]);
-    notifyListeners();
+    saveChange();
   }
 
   void removeProblemSolution(ProblemSolution problemSolution) {
-    _task = _task.copyWith(
-        problemSolutions: _task.problemSolutions..remove(problemSolution));
-    notifyListeners();
+    List<ProblemSolution> problemSolutions = _task.problemSolutions.toList();
+    problemSolutions.remove(problemSolution);
+    _task = _task.copyWith(problemSolutions: problemSolutions);
+    saveChange();
   }
 
   void updateProblemSolution(
@@ -78,16 +110,55 @@ class TaskProvider extends ChangeNotifier {
     problemSolutions[problemSolutions.indexOf(oldProblemSolution)] =
         newProblemSolution;
     _task = _task.copyWith(problemSolutions: problemSolutions);
-    notifyListeners();
+    saveChange();
   }
 
   void setTaskReward(String reward) {
     _task = _task.copyWith(reward: reward);
-    notifyListeners();
+    saveChange();
   }
 
   void setTaskCompleted(bool completed) {
     _task = _task.copyWith(completed: completed);
+    saveChange();
+  }
+
+  void updateReflection(String question, String answer) {
+    _task =
+        _task.copyWith(reflectionQuestion: question, reflectionAnswer: answer);
+    saveChange();
+  }
+
+  void complete() {
+    _task = _task.copyWith(completed: true);
+    saveChange();
+  }
+
+  void addTaskToHistory() {
+    addAsPastTask(_task);
+  }
+
+  void endTask() {
+    _task = _task.copyWith(ended: true);
+    incrementTaskIdCounter();
+    addTaskToHistory();
+    saveChange();
+  }
+
+  void restartTask(parentId) async {
+    _task = _task.copyWith(
+        id: await readTaskIdCounter(),
+        parentId: parentId,
+        ended: false,
+        completed: false,
+        startTime: DateTime.now());
+    saveChange();
+  }
+
+  void saveChange() {
+    writeCurrentTask(task);
     notifyListeners();
   }
+
+  get is_all_steps_completed => _task.steps.every((step) => step.isCompleted);
 }

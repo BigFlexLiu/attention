@@ -1,9 +1,10 @@
 import 'package:attention/provider/task_provider.dart';
 import 'package:attention/scenes/create_task/next_task.dart';
 import 'package:attention/scenes/current_task/ongoing_task.dart';
-import 'package:attention/scenes/reflection/reflection.dart';
+import 'package:attention/scenes/history/history.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
 
 void main() {
   runApp(
@@ -42,43 +43,42 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+    final task = Provider.of<TaskProvider>(context);
+    print(task.task);
+
+    if (task.task.startTime != null &&
+        task.task.startTime!.add(task.task.duration!).isAfter(DateTime.now()) &&
+        !task.task.ended) {
+      print("what");
+      return const OnGoingTask();
+    }
+
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: Text(widget.title),
         ),
-        body: Center(
-            child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-              OptionButton("Next Task", () {
+        body: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              OptionButton("Create Task", () {
+                task.newTask();
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => const NextTask(),
                   ),
                 );
               }),
-              OptionButton("Records", () {}),
-              OptionButton("Reflection", () {}),
-              Expanded(child: Container()),
-              const Text(
-                'You have pushed the button this many times:',
-              ),
-              OptionButton("temp", () {
+              OptionButton("History", () {
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => const OnGoingTask(),
+                    builder: (context) => const History(),
                   ),
                 );
               }),
-              OptionButton("reflection", () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const Reflection(),
-                  ),
-                );
-              }),
-            ])));
+              OptionButton("Notes", () {}),
+              SafeArea(child: Container()),
+            ]));
   }
 }
 
@@ -90,6 +90,12 @@ class OptionButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return TextButton(onPressed: onClick, child: Text(text));
+    return TextButton(
+      onPressed: onClick,
+      child: Text(
+        text,
+        style: Theme.of(context).textTheme.bodyLarge,
+      ),
+    );
   }
 }

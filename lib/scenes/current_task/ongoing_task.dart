@@ -2,9 +2,7 @@ import 'package:attention/scenes/current_task/prevent.dart';
 import 'package:attention/scenes/current_task/steps.dart';
 import 'package:attention/scenes/current_task/timer.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 
-import '../../provider/task_provider.dart';
 
 class OnGoingTask extends StatefulWidget {
   const OnGoingTask({super.key});
@@ -24,7 +22,6 @@ class _OnGoingTaskState extends State<OnGoingTask> {
 
   @override
   Widget build(BuildContext context) {
-    final task = Provider.of<TaskProvider>(context);
     return Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -54,7 +51,7 @@ class _OnGoingTaskState extends State<OnGoingTask> {
 }
 
 final _NavBarItems = [
-  {"name": "Timer", "widget": const Timer()},
+  {"name": "Timer", "widget": const TaskTimer()},
   {"name": "Steps", "widget": const Steps()},
   {"name": "Problems", "widget": const Prevent()},
 ];

@@ -22,8 +22,6 @@ class ProblemSolutionList extends StatefulWidget {
 class _ProblemSolutionListState extends State<ProblemSolutionList> {
   @override
   Widget build(BuildContext context) {
-    // final problemSolutions =
-    //     Provider.of<ProblemSolutionProvider>(context).problemSolutions;
     final problemSolutions =
         Provider.of<TaskProvider>(context).task.problemSolutions;
     return ListView(

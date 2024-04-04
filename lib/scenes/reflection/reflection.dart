@@ -1,6 +1,11 @@
 import 'dart:math';
 
+import 'package:attention/scenes/break/break.dart';
+import 'package:attention/scenes/current_task/ongoing_task.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
+import '../../provider/task_provider.dart';
 
 class Reflection extends StatefulWidget {
   const Reflection({super.key});
@@ -19,8 +24,16 @@ class _ReflectionState extends State<Reflection> {
     return Scaffold(
       appBar: AppBar(
         title: const Text("Reflection"),
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back), // Use any icon you prefer
+          onPressed: () {
+            Navigator.pushReplacement(context,
+                MaterialPageRoute(builder: (context) => const OnGoingTask()));
+          },
+        ),
       ),
-      body: Padding(
+      body: Container(
         padding: const EdgeInsets.all(8.0),
         child: ListView(children: [
           Text(
@@ -50,10 +63,12 @@ class _ReflectionState extends State<Reflection> {
               const SizedBox(width: 16),
               ElevatedButton(
                 onPressed: () {
-                  // Save reflection
-                  reflectionController.clear();
                   setState(() {
-                    // Change question
+                    Provider.of<TaskProvider>(context, listen: false)
+                      ..updateReflection(question, reflectionController.text)
+                      ..endTask();
+                    Navigator.pushReplacement(context,
+                        MaterialPageRoute(builder: (context) => const Break()));
                   });
                 },
                 child: const Text("Submit"),

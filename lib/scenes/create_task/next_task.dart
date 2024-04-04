@@ -1,6 +1,7 @@
 import 'package:attention/scenes/create_task/problem_solution.dart';
 import 'package:attention/scenes/create_task/task_breakdown.dart';
 import 'package:attention/scenes/create_task/time_setter.dart';
+import 'package:attention/scenes/current_task/ongoing_task.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -15,6 +16,19 @@ class NextTask extends StatefulWidget {
 }
 
 class _NextTaskState extends State<NextTask> {
+  late String initialTitle;
+  late String initialPersonalImportance;
+  late String initialReward;
+
+  @override
+  void initState() {
+    final task = Provider.of<TaskProvider>(context, listen: false).task;
+    initialTitle = task.title;
+    initialPersonalImportance = task.personalImportance;
+    initialReward = task.reward;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -22,10 +36,12 @@ class _NextTaskState extends State<NextTask> {
         TaskQuestionModel(
           title: 'Define',
           description: 'What do you want to achieve?',
-          hint: "Be specific and clear",
+          hint: null,
           imageUrl: 'https://i.ibb.co/cJqsPSB/scooter.png',
           inputWidget: TextField(
-            decoration: const InputDecoration(hintText: "Be concise"),
+            controller: TextEditingController()..text = initialTitle,
+            decoration:
+                const InputDecoration(hintText: "Be specific and concise"),
             onChanged: (value) {
               Provider.of<TaskProvider>(context, listen: false)
                   .setTaskTitle(value);
@@ -45,17 +61,20 @@ class _NextTaskState extends State<NextTask> {
         TaskQuestionModel(
           title: 'Steps',
           description: 'How do you break this task down into simpler steps?',
-          hint: "Keep in mind of the ordering of the steps",
+          hint: "Break it down into smaller tasks to make it more manageable.",
           imageUrl: 'https://i.ibb.co/420D7VP/building.png',
           inputWidget: const TaskBreakdown(),
           bgColor: taskComponentColors["steps"]!,
         ),
         TaskQuestionModel(
           title: 'Reflect',
-          description: 'Why is important for you to complete this task?',
-          hint: "Be honest, the more personal the better.",
+          description: 'Why is it important for you to complete this task?',
+          hint:
+              "A strong reason is a good motivator, especially a personal one.",
           imageUrl: 'https://i.ibb.co/cJqsPSB/scooter.png',
           inputWidget: TextField(
+            controller: TextEditingController()
+              ..text = initialPersonalImportance,
             decoration:
                 const InputDecoration(hintText: "Be specific and clear"),
             maxLines: null,
@@ -69,7 +88,8 @@ class _NextTaskState extends State<NextTask> {
         TaskQuestionModel(
           title: 'Prevent',
           description: 'What problem might disrupt you?',
-          hint: "Anticipate and plan for the worst.",
+          hint:
+              "What problem have you encountered before doing a similar task?",
           imageUrl: 'https://i.ibb.co/cJqsPSB/scooter.png',
           inputWidget: const ProblemSolutions(),
           bgColor: taskComponentColors["problemSolutions"]!,
@@ -80,8 +100,8 @@ class _NextTaskState extends State<NextTask> {
           hint: "What do you enjoy doing? It could also be a small treat.",
           imageUrl: 'https://i.ibb.co/cJqsPSB/scooter.png',
           inputWidget: TextField(
-            decoration:
-                const InputDecoration(hintText: "Be specific and clear"),
+            controller: TextEditingController()..text = initialReward,
+            decoration: const InputDecoration(hintText: "Be kind to yourself"),
             maxLines: null,
             onChanged: (value) {
               Provider.of<TaskProvider>(context, listen: false)
@@ -155,29 +175,32 @@ class _OnboardingPageState extends State<OnboardingPagePresenter> {
                                               fontWeight: FontWeight.bold,
                                               color: item.textColor,
                                             )),
-                                    IconButton(
-                                        onPressed: () {
-                                          showDialog(
-                                              context: context,
-                                              builder: (BuildContext context) {
-                                                return AlertDialog(
-                                                  title: const Text("Hint"),
-                                                  content: Text(item.hint),
-                                                  actions: <Widget>[
-                                                    TextButton(
-                                                      onPressed: () {
-                                                        Navigator.of(context)
-                                                            .pop();
-                                                      },
-                                                      child:
-                                                          const Text('Close'),
-                                                    ),
-                                                  ],
-                                                );
-                                              });
-                                        },
-                                        icon: Icon(Icons.help,
-                                            color: invertColor(item.textColor)))
+                                    if (item.hint != null)
+                                      IconButton(
+                                          onPressed: () {
+                                            showDialog(
+                                                context: context,
+                                                builder:
+                                                    (BuildContext context) {
+                                                  return AlertDialog(
+                                                    title: const Text("Hint"),
+                                                    content: Text(item.hint!),
+                                                    actions: <Widget>[
+                                                      TextButton(
+                                                        onPressed: () {
+                                                          Navigator.of(context)
+                                                              .pop();
+                                                        },
+                                                        child:
+                                                            const Text('Close'),
+                                                      ),
+                                                    ],
+                                                  );
+                                                });
+                                          },
+                                          icon: Icon(Icons.help,
+                                              color:
+                                                  invertColor(item.textColor)))
                                   ],
                                 ),
                                 Container(
@@ -268,7 +291,12 @@ class _OnboardingPageState extends State<OnboardingPagePresenter> {
                               fontSize: 16, fontWeight: FontWeight.bold)),
                       onPressed: () {
                         if (_currentPage == widget.pages.length - 1) {
-                          widget.onFinish?.call();
+                          Provider.of<TaskProvider>(context, listen: false)
+                              .setTaskStartTime(DateTime.now());
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => const OnGoingTask()));
                         } else {
                           _pageController.animateToPage(_currentPage + 1,
                               curve: Curves.easeInOutCubic,
@@ -303,7 +331,7 @@ class _OnboardingPageState extends State<OnboardingPagePresenter> {
 class TaskQuestionModel {
   final String title;
   final String description;
-  final String hint;
+  final String? hint;
   final String imageUrl;
   final Widget inputWidget;
   final Color bgColor;

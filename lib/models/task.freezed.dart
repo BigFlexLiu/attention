@@ -20,6 +20,8 @@ Task _$TaskFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$Task {
+  int get id => throw _privateConstructorUsedError;
+  int? get parentId => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   Duration? get duration => throw _privateConstructorUsedError;
   DateTime? get startTime => throw _privateConstructorUsedError;
@@ -29,7 +31,9 @@ mixin _$Task {
       throw _privateConstructorUsedError;
   String get reward => throw _privateConstructorUsedError;
   bool get completed => throw _privateConstructorUsedError;
-  String get Reflection => throw _privateConstructorUsedError;
+  bool get ended => throw _privateConstructorUsedError;
+  String get reflectionQuestion => throw _privateConstructorUsedError;
+  String get reflectionAnswer => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -42,7 +46,9 @@ abstract class $TaskCopyWith<$Res> {
       _$TaskCopyWithImpl<$Res, Task>;
   @useResult
   $Res call(
-      {String title,
+      {int id,
+      int? parentId,
+      String title,
       Duration? duration,
       DateTime? startTime,
       List<Substep> steps,
@@ -50,7 +56,9 @@ abstract class $TaskCopyWith<$Res> {
       List<ProblemSolution> problemSolutions,
       String reward,
       bool completed,
-      String Reflection});
+      bool ended,
+      String reflectionQuestion,
+      String reflectionAnswer});
 }
 
 /// @nodoc
@@ -66,6 +74,8 @@ class _$TaskCopyWithImpl<$Res, $Val extends Task>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
+    Object? parentId = freezed,
     Object? title = null,
     Object? duration = freezed,
     Object? startTime = freezed,
@@ -74,9 +84,19 @@ class _$TaskCopyWithImpl<$Res, $Val extends Task>
     Object? problemSolutions = null,
     Object? reward = null,
     Object? completed = null,
-    Object? Reflection = null,
+    Object? ended = null,
+    Object? reflectionQuestion = null,
+    Object? reflectionAnswer = null,
   }) {
     return _then(_value.copyWith(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      parentId: freezed == parentId
+          ? _value.parentId
+          : parentId // ignore: cast_nullable_to_non_nullable
+              as int?,
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -109,9 +129,17 @@ class _$TaskCopyWithImpl<$Res, $Val extends Task>
           ? _value.completed
           : completed // ignore: cast_nullable_to_non_nullable
               as bool,
-      Reflection: null == Reflection
-          ? _value.Reflection
-          : Reflection // ignore: cast_nullable_to_non_nullable
+      ended: null == ended
+          ? _value.ended
+          : ended // ignore: cast_nullable_to_non_nullable
+              as bool,
+      reflectionQuestion: null == reflectionQuestion
+          ? _value.reflectionQuestion
+          : reflectionQuestion // ignore: cast_nullable_to_non_nullable
+              as String,
+      reflectionAnswer: null == reflectionAnswer
+          ? _value.reflectionAnswer
+          : reflectionAnswer // ignore: cast_nullable_to_non_nullable
               as String,
     ) as $Val);
   }
@@ -125,7 +153,9 @@ abstract class _$$TaskImplCopyWith<$Res> implements $TaskCopyWith<$Res> {
   @override
   @useResult
   $Res call(
-      {String title,
+      {int id,
+      int? parentId,
+      String title,
       Duration? duration,
       DateTime? startTime,
       List<Substep> steps,
@@ -133,7 +163,9 @@ abstract class _$$TaskImplCopyWith<$Res> implements $TaskCopyWith<$Res> {
       List<ProblemSolution> problemSolutions,
       String reward,
       bool completed,
-      String Reflection});
+      bool ended,
+      String reflectionQuestion,
+      String reflectionAnswer});
 }
 
 /// @nodoc
@@ -146,6 +178,8 @@ class __$$TaskImplCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
+    Object? id = null,
+    Object? parentId = freezed,
     Object? title = null,
     Object? duration = freezed,
     Object? startTime = freezed,
@@ -154,9 +188,19 @@ class __$$TaskImplCopyWithImpl<$Res>
     Object? problemSolutions = null,
     Object? reward = null,
     Object? completed = null,
-    Object? Reflection = null,
+    Object? ended = null,
+    Object? reflectionQuestion = null,
+    Object? reflectionAnswer = null,
   }) {
     return _then(_$TaskImpl(
+      id: null == id
+          ? _value.id
+          : id // ignore: cast_nullable_to_non_nullable
+              as int,
+      parentId: freezed == parentId
+          ? _value.parentId
+          : parentId // ignore: cast_nullable_to_non_nullable
+              as int?,
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -189,9 +233,17 @@ class __$$TaskImplCopyWithImpl<$Res>
           ? _value.completed
           : completed // ignore: cast_nullable_to_non_nullable
               as bool,
-      Reflection: null == Reflection
-          ? _value.Reflection
-          : Reflection // ignore: cast_nullable_to_non_nullable
+      ended: null == ended
+          ? _value.ended
+          : ended // ignore: cast_nullable_to_non_nullable
+              as bool,
+      reflectionQuestion: null == reflectionQuestion
+          ? _value.reflectionQuestion
+          : reflectionQuestion // ignore: cast_nullable_to_non_nullable
+              as String,
+      reflectionAnswer: null == reflectionAnswer
+          ? _value.reflectionAnswer
+          : reflectionAnswer // ignore: cast_nullable_to_non_nullable
               as String,
     ));
   }
@@ -201,7 +253,9 @@ class __$$TaskImplCopyWithImpl<$Res>
 @JsonSerializable()
 class _$TaskImpl with DiagnosticableTreeMixin implements _Task {
   const _$TaskImpl(
-      {required this.title,
+      {required this.id,
+      required this.parentId,
+      required this.title,
       required this.duration,
       required this.startTime,
       required final List<Substep> steps,
@@ -209,13 +263,19 @@ class _$TaskImpl with DiagnosticableTreeMixin implements _Task {
       required final List<ProblemSolution> problemSolutions,
       required this.reward,
       required this.completed,
-      required this.Reflection})
+      required this.ended,
+      required this.reflectionQuestion,
+      required this.reflectionAnswer})
       : _steps = steps,
         _problemSolutions = problemSolutions;
 
   factory _$TaskImpl.fromJson(Map<String, dynamic> json) =>
       _$$TaskImplFromJson(json);
 
+  @override
+  final int id;
+  @override
+  final int? parentId;
   @override
   final String title;
   @override
@@ -246,11 +306,15 @@ class _$TaskImpl with DiagnosticableTreeMixin implements _Task {
   @override
   final bool completed;
   @override
-  final String Reflection;
+  final bool ended;
+  @override
+  final String reflectionQuestion;
+  @override
+  final String reflectionAnswer;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'Task(title: $title, duration: $duration, startTime: $startTime, steps: $steps, personalImportance: $personalImportance, problemSolutions: $problemSolutions, reward: $reward, completed: $completed, Reflection: $Reflection)';
+    return 'Task(id: $id, parentId: $parentId, title: $title, duration: $duration, startTime: $startTime, steps: $steps, personalImportance: $personalImportance, problemSolutions: $problemSolutions, reward: $reward, completed: $completed, ended: $ended, reflectionQuestion: $reflectionQuestion, reflectionAnswer: $reflectionAnswer)';
   }
 
   @override
@@ -258,6 +322,8 @@ class _$TaskImpl with DiagnosticableTreeMixin implements _Task {
     super.debugFillProperties(properties);
     properties
       ..add(DiagnosticsProperty('type', 'Task'))
+      ..add(DiagnosticsProperty('id', id))
+      ..add(DiagnosticsProperty('parentId', parentId))
       ..add(DiagnosticsProperty('title', title))
       ..add(DiagnosticsProperty('duration', duration))
       ..add(DiagnosticsProperty('startTime', startTime))
@@ -266,7 +332,9 @@ class _$TaskImpl with DiagnosticableTreeMixin implements _Task {
       ..add(DiagnosticsProperty('problemSolutions', problemSolutions))
       ..add(DiagnosticsProperty('reward', reward))
       ..add(DiagnosticsProperty('completed', completed))
-      ..add(DiagnosticsProperty('Reflection', Reflection));
+      ..add(DiagnosticsProperty('ended', ended))
+      ..add(DiagnosticsProperty('reflectionQuestion', reflectionQuestion))
+      ..add(DiagnosticsProperty('reflectionAnswer', reflectionAnswer));
   }
 
   @override
@@ -274,6 +342,9 @@ class _$TaskImpl with DiagnosticableTreeMixin implements _Task {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$TaskImpl &&
+            (identical(other.id, id) || other.id == id) &&
+            (identical(other.parentId, parentId) ||
+                other.parentId == parentId) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.duration, duration) ||
                 other.duration == duration) &&
@@ -287,14 +358,19 @@ class _$TaskImpl with DiagnosticableTreeMixin implements _Task {
             (identical(other.reward, reward) || other.reward == reward) &&
             (identical(other.completed, completed) ||
                 other.completed == completed) &&
-            (identical(other.Reflection, Reflection) ||
-                other.Reflection == Reflection));
+            (identical(other.ended, ended) || other.ended == ended) &&
+            (identical(other.reflectionQuestion, reflectionQuestion) ||
+                other.reflectionQuestion == reflectionQuestion) &&
+            (identical(other.reflectionAnswer, reflectionAnswer) ||
+                other.reflectionAnswer == reflectionAnswer));
   }
 
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(
       runtimeType,
+      id,
+      parentId,
       title,
       duration,
       startTime,
@@ -303,7 +379,9 @@ class _$TaskImpl with DiagnosticableTreeMixin implements _Task {
       const DeepCollectionEquality().hash(_problemSolutions),
       reward,
       completed,
-      Reflection);
+      ended,
+      reflectionQuestion,
+      reflectionAnswer);
 
   @JsonKey(ignore: true)
   @override
@@ -321,7 +399,9 @@ class _$TaskImpl with DiagnosticableTreeMixin implements _Task {
 
 abstract class _Task implements Task {
   const factory _Task(
-      {required final String title,
+      {required final int id,
+      required final int? parentId,
+      required final String title,
       required final Duration? duration,
       required final DateTime? startTime,
       required final List<Substep> steps,
@@ -329,10 +409,16 @@ abstract class _Task implements Task {
       required final List<ProblemSolution> problemSolutions,
       required final String reward,
       required final bool completed,
-      required final String Reflection}) = _$TaskImpl;
+      required final bool ended,
+      required final String reflectionQuestion,
+      required final String reflectionAnswer}) = _$TaskImpl;
 
   factory _Task.fromJson(Map<String, dynamic> json) = _$TaskImpl.fromJson;
 
+  @override
+  int get id;
+  @override
+  int? get parentId;
   @override
   String get title;
   @override
@@ -350,7 +436,11 @@ abstract class _Task implements Task {
   @override
   bool get completed;
   @override
-  String get Reflection;
+  bool get ended;
+  @override
+  String get reflectionQuestion;
+  @override
+  String get reflectionAnswer;
   @override
   @JsonKey(ignore: true)
   _$$TaskImplCopyWith<_$TaskImpl> get copyWith =>

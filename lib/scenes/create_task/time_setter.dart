@@ -28,7 +28,7 @@ class _TimePickerExampleState extends State<TimePickerExample> {
   Widget build(BuildContext context) {
     return CupertinoTimerPicker(
       mode: CupertinoTimerPickerMode.hms,
-      initialTimerDuration: const Duration(hours: 0, minutes: 25, seconds: 0),
+      initialTimerDuration: Provider.of<TaskProvider>(context).task.duration!,
       onTimerDurationChanged: (Duration newTimerDuration) {
         Provider.of<TaskProvider>(context, listen: false)
             .setTaskTime(newTimerDuration);

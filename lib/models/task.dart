@@ -9,6 +9,8 @@ part 'task.g.dart';
 @freezed
 abstract class Task with _$Task {
   const factory Task({
+    required int id,
+    required int? parentId,
     required String title,
     required Duration? duration,
     required DateTime? startTime,
@@ -17,26 +19,33 @@ abstract class Task with _$Task {
     required List<ProblemSolution> problemSolutions,
     required String reward,
     required bool completed,
-    required String Reflection,
+    required bool ended,
+    required String reflectionQuestion,
+    required String reflectionAnswer,
   }) = _Task;
 
   factory Task.fromJson(Map<String, dynamic> json) => _$TaskFromJson(json);
 
   factory Task.defaultsetup() => const Task(
+        id: 0,
+        parentId: null,
         title: "",
-        duration: null,
+        duration: Duration(minutes: 25),
         startTime: null,
         steps: [],
         personalImportance: "",
         problemSolutions: [],
         reward: "",
         completed: false,
-        Reflection: "",
+        ended: false,
+        reflectionQuestion: "",
+        reflectionAnswer: "",
       );
 
   factory Task.testsetup() => Task(
-        title:
-            "It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+        id: 0,
+        parentId: null,
+        title: "Sample Task",
         duration: const Duration(minutes: 30),
         startTime: DateTime.now(),
         steps: [
@@ -46,10 +55,13 @@ abstract class Task with _$Task {
         ],
         personalImportance: "High",
         problemSolutions: [
-          const ProblemSolution(problem: "Test Problem", solution: "Test Solution"),
+          const ProblemSolution(
+              problem: "Test Problem", solution: "Test Solution"),
         ],
         reward: "Test Reward",
         completed: false,
-        Reflection: "I learned to sipnut",
+        ended: false,
+        reflectionQuestion: "What did you learn?",
+        reflectionAnswer: "I learned to sipnut",
       );
 }

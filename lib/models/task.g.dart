@@ -7,6 +7,8 @@ part of 'task.dart';
 // **************************************************************************
 
 _$TaskImpl _$$TaskImplFromJson(Map<String, dynamic> json) => _$TaskImpl(
+      id: json['id'] as int,
+      parentId: json['parentId'] as int?,
       title: json['title'] as String,
       duration: json['duration'] == null
           ? null
@@ -23,11 +25,15 @@ _$TaskImpl _$$TaskImplFromJson(Map<String, dynamic> json) => _$TaskImpl(
           .toList(),
       reward: json['reward'] as String,
       completed: json['completed'] as bool,
-      Reflection: json['Reflection'] as String,
+      ended: json['ended'] as bool,
+      reflectionQuestion: json['reflectionQuestion'] as String,
+      reflectionAnswer: json['reflectionAnswer'] as String,
     );
 
 Map<String, dynamic> _$$TaskImplToJson(_$TaskImpl instance) =>
     <String, dynamic>{
+      'id': instance.id,
+      'parentId': instance.parentId,
       'title': instance.title,
       'duration': instance.duration?.inMicroseconds,
       'startTime': instance.startTime?.toIso8601String(),
@@ -36,5 +42,7 @@ Map<String, dynamic> _$$TaskImplToJson(_$TaskImpl instance) =>
       'problemSolutions': instance.problemSolutions,
       'reward': instance.reward,
       'completed': instance.completed,
-      'Reflection': instance.Reflection,
+      'ended': instance.ended,
+      'reflectionQuestion': instance.reflectionQuestion,
+      'reflectionAnswer': instance.reflectionAnswer,
     };
