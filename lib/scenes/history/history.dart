@@ -3,10 +3,10 @@ import 'package:attention/models/task.dart';
 import 'package:attention/scenes/create_task/next_task.dart';
 import 'package:attention/scenes/history/details.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 import '../../provider/task_provider.dart';
+import '../../util/util.dart';
 
 class History extends StatefulWidget {
   const History({super.key});
@@ -100,8 +100,8 @@ class _HistoryState extends State<History> {
                                         TextButton(
                                             onPressed: () {
                                               Provider.of<TaskProvider>(context,
-                                                  listen: false)
-                                                .setTask(task);
+                                                      listen: false)
+                                                  .setTask(task);
                                               Navigator.of(context).pop();
                                               Navigator.of(context)
                                                   .pushReplacement(
@@ -123,7 +123,7 @@ class _HistoryState extends State<History> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                    "Started: ${DateFormat("dd LLLL, yyyy, h:mm a").format(task.startTime!)}"),
+                                    "Started: ${fullDateDisplay(task.startTime!)}"),
                                 Text("Duration: $durationString"),
                                 Text(task.personalImportance),
                               ]),

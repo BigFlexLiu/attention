@@ -293,6 +293,7 @@ class _OnboardingPageState extends State<OnboardingPagePresenter> {
                         if (_currentPage == widget.pages.length - 1) {
                           Provider.of<TaskProvider>(context, listen: false)
                               .setTaskStartTime(DateTime.now());
+                          // Navigator.pop(context);
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(
