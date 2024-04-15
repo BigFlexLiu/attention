@@ -183,9 +183,13 @@ Future<List<HangedNoteInfo>> readHangedNotesInfo() async {
   final noteString = file.readAsStringSync();
   final List noteJson = jsonDecode(noteString);
 
-  return noteJson
+  List<HangedNoteInfo> noteInfos = noteJson
       .map<HangedNoteInfo>((json) => HangedNoteInfo.fromJson(json))
       .toList();
+
+  noteInfos
+      .removeWhere((element) => element.hangUntil.isBefore(DateTime.now()));
+  return noteInfos;
 }
 
 Future<List> readHangedNotes() async {
