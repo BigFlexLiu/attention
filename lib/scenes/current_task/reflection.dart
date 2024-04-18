@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../provider/task_provider.dart';
+import '../../util/services.dart';
 
 class Reflection extends StatefulWidget {
   const Reflection({super.key});
@@ -64,6 +65,7 @@ class _ReflectionState extends State<Reflection> {
               ElevatedButton(
                 onPressed: () {
                   setState(() {
+                    PlatformService.cancelTimer();
                     Provider.of<TaskProvider>(context, listen: false)
                       ..updateReflection(question, reflectionController.text)
                       ..endTask();

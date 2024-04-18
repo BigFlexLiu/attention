@@ -36,7 +36,7 @@ class HangedNotesProvider extends ChangeNotifier {
     pullHangedNotes();
   }
 
-  void pullHangedNotes() async {
+  Future<void> pullHangedNotes() async {
     _hangedNotesInfo = await readHangedNotesInfo();
     final noteList = await readHangedNotes();
     notes = Map.fromIterable(noteList,

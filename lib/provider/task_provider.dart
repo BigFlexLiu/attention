@@ -10,13 +10,13 @@ class TaskProvider extends ChangeNotifier {
 
   Task get task => _task;
 
-  TaskProvider() {
-    readCurrentTask().then((task) {
-      if (task != null) {
-        _task = task;
-        saveChange();
-      }
-    });
+  Future<void> init() async {
+    final task = await readCurrentTask();
+    if (task != null) {
+      _task = task;
+      saveChange();
+    }
+    notifyListeners();
   }
 
   Future<void> newTask() async {

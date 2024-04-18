@@ -1,5 +1,7 @@
-import 'package:attention/scenes/reflection/reflection.dart';
+
+import 'package:attention/scenes/current_task/reflection.dart';
 import 'package:attention/theme.dart';
+import 'package:attention/util/services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -27,6 +29,11 @@ class _TaskTimerState extends State<TaskTimer> {
 
   @override
   Widget build(BuildContext context) {
+    final bool useHour = Provider.of<TaskProvider>(context, listen: false)
+            .task
+            .duration
+            ?.inHours !=
+        0;
     if (!_stopWatchTimer.isRunning) {
       Duration? duration =
           Provider.of<TaskProvider>(context, listen: false).task.duration;
@@ -60,7 +67,7 @@ class _TaskTimerState extends State<TaskTimer> {
               builder: (context, snap) {
                 final value = snap.data;
                 final displayTime = StopWatchTimer.getDisplayTime(value ?? 0,
-                    milliSecond: false, hours: false);
+                    milliSecond: false, hours: useHour);
                 return Padding(
                   padding: const EdgeInsets.all(8),
                   child: Center(
@@ -89,8 +96,8 @@ class _TaskTimerState extends State<TaskTimer> {
                                 TextButton(
                                   onPressed: () {
                                     Provider.of<TaskProvider>(context,
-                                        listen: false)
-                                      .complete();
+                                            listen: false)
+                                        .complete();
                                     Navigator.pop(context);
                                     Navigator.pushReplacement(
                                         context,
@@ -197,6 +204,7 @@ class _TaskTimerState extends State<TaskTimer> {
                           actions: <Widget>[
                             TextButton(
                               onPressed: () {
+                                PlatformService.cancelTimer();
                                 Provider.of<TaskProvider>(context,
                                         listen: false)
                                     .newTask();

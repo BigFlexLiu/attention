@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../provider/task_provider.dart';
+import '../../util/services.dart';
 import '../../util/util.dart';
+import 'history_calendar.dart';
 
 class History extends StatefulWidget {
   const History({super.key});
@@ -51,6 +53,15 @@ class _HistoryState extends State<History> {
                 title: const Text("History"),
                 actions: [
                   IconButton(
+                    icon: const Icon(Icons.calendar_month),
+                    onPressed: () {
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder:
+                              // (context) => TableComplexExample()));
+                              (context) => HistoryCalendar(snapshot.data!)));
+                    },
+                  ),
+                  IconButton(
                       tooltip: filterDisplay[currentFilter]!.title,
                       onPressed: () {
                         setState(() {
@@ -64,14 +75,6 @@ class _HistoryState extends State<History> {
               body: ListView(
                   children: tasks.reversed.map((task) {
                 Duration duration = task.duration ?? Duration.zero;
-                String durationString = "";
-
-                if (duration.inHours > 0) {
-                  durationString += "${duration.inHours} hours";
-                }
-                if (duration.inMinutes > 0) {
-                  durationString += "${duration.inMinutes} minutes";
-                }
 
                 final cardColor = task.completed
                     ? Theme.of(context).colorScheme.primaryContainer
@@ -88,6 +91,10 @@ class _HistoryState extends State<History> {
                                       children: [
                                         TextButton(
                                             onPressed: () {
+                                              final durationInSeconds =
+                                                  task.duration!.inSeconds;
+                                              PlatformService.startService(
+                                                  durationInSeconds);
                                               Provider.of<TaskProvider>(context,
                                                   listen: false)
                                                 ..setTask(task)
@@ -124,7 +131,7 @@ class _HistoryState extends State<History> {
                               children: [
                                 Text(
                                     "Started: ${fullDateDisplay(task.startTime!)}"),
-                                Text("Duration: $durationString"),
+                                Text("Duration: ${durationDisplay(duration)}"),
                                 Text(task.personalImportance),
                               ]),
                           children: [

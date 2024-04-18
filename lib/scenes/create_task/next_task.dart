@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../../provider/task_provider.dart';
 import '../../theme.dart';
+import '../../util/services.dart';
 
 class NextTask extends StatefulWidget {
   const NextTask({Key? key}) : super(key: key);
@@ -289,11 +290,18 @@ class _OnboardingPageState extends State<OnboardingPagePresenter> {
                           foregroundColor: Colors.white,
                           textStyle: const TextStyle(
                               fontSize: 16, fontWeight: FontWeight.bold)),
-                      onPressed: () {
+                      onPressed: () async {
                         if (_currentPage == widget.pages.length - 1) {
                           Provider.of<TaskProvider>(context, listen: false)
                               .setTaskStartTime(DateTime.now());
-                          // Navigator.pop(context);
+
+                          final durationInSeconds =
+                              Provider.of<TaskProvider>(context, listen: false)
+                                  .task
+                                  .duration!
+                                  .inSeconds;
+                          PlatformService.startService(durationInSeconds);
+
                           Navigator.pushReplacement(
                               context,
                               MaterialPageRoute(

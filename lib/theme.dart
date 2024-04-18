@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 
 final taskComponentColors = {
-  "title": Colors.indigo,
-  "time": Colors.teal,
-  "steps": Colors.orange[400],
-  "personalImportance": Colors.purple[300],
-  "problemSolutions": Colors.green[600],
-  "promise": Colors.cyan[400],
+  "title": Colors.indigo[400],
+  "time": Colors.teal[300],
+  "steps": Colors.orange[100],
+  "personalImportance": Colors.purple[100],
+  "problemSolutions": Colors.green[200],
+  "promise": Colors.cyan[300],
 };
 
 final todoNoteTreeColorMapper = [

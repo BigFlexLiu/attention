@@ -5,20 +5,29 @@ import 'package:attention/scenes/current_task/ongoing_task.dart';
 import 'package:attention/scenes/history/history.dart';
 import 'package:attention/scenes/note/notes_menu.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 
 import 'hang_notes_gallery.dart';
 import 'load_on_start.dart';
 
+@pragma('vm:entry-point')
+void notificationTapBackground(NotificationResponse notificationResponse) {
+  // handle action
+}
+
 void main() async {
   WidgetsFlutterBinding
       .ensureInitialized(); // Ensure plugin services are initialized
 
+  // Initialize the app
   await checkFirstLaunchAndUpdate(); // Check and update launch status
   final hangedNotesProvider = HangedNotesProvider()..pullHangedNotes();
+  final taskProvider = TaskProvider();
+  await taskProvider.init();
   runApp(
     MultiProvider(providers: [
-      ChangeNotifierProvider(create: (context) => TaskProvider()),
+      ChangeNotifierProvider(create: (context) => taskProvider),
       ChangeNotifierProvider(create: (context) => hangedNotesProvider),
     ], child: const MyApp()),
   );
@@ -119,7 +128,6 @@ class _MyHomePageState extends State<MyHomePage> {
                   ),
                 );
               }),
-              SafeArea(child: Container()),
             ]));
   }
 }

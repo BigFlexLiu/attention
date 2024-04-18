@@ -43,6 +43,16 @@ class _NotesMenuState extends State<NotesMenu> {
     }
   }
 
+  NoteFilter nextFilter(NoteFilter filter) {
+    if (filter == NoteFilter.all) {
+      return NoteFilter.simple;
+    } else if (filter == NoteFilter.simple) {
+      return NoteFilter.todo;
+    } else {
+      return NoteFilter.all;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -84,15 +94,11 @@ class _NotesMenuState extends State<NotesMenu> {
                   },
                 ),
                 IconButton(
-                  icon: const Icon(Icons.calendar_month),
-                  onPressed: () {},
-                ),
-                IconButton(
                   icon: Icon(filterIcon[filter]!.icon),
                   onPressed: () {
-                    Icons.list; // All notes
-                    Icons.segment; // Todo notes
-                    Icons.notes; // Simple notes
+                    setState(() {
+                      filter = nextFilter(filter);
+                    });
                   },
                 ),
               ],

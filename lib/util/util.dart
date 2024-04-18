@@ -6,7 +6,7 @@ import 'package:intl/intl.dart';
 import '../models/todo_note.dart';
 
 DateTime dayOf(DateTime date) {
-  return DateTime(date.year, date.month, date.day);
+  return DateTime.utc(date.year, date.month, date.day);
 }
 
 bool hasDayPassed(DateTime time) {
@@ -29,6 +29,17 @@ bool hasMonthPassed(DateTime time) {
 
 String fullDateDisplay(DateTime time) {
   return DateFormat("dd LLLL, yyyy, h:mm a").format(time);
+}
+
+String durationDisplay(Duration duration) {
+  String durationString = "";
+  if (duration.inHours > 0) {
+    durationString += "${duration.inHours} hours";
+  }
+  if (duration.inMinutes > 0) {
+    durationString += "${duration.inMinutes} minutes";
+  }
+  return durationString;
 }
 
 extension MyExtension on TreeNode {
