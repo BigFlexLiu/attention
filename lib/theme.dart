@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 final taskComponentColors = {
   "title": Colors.indigo[400],
   "time": Colors.teal[300],
-  "steps": Colors.orange[100],
-  "personalImportance": Colors.purple[100],
-  "problemSolutions": Colors.green[200],
+  "steps": Colors.red[200],
+  "personalImportance": Colors.purple[200],
+  "problemSolutions": Colors.green[300],
   "promise": Colors.cyan[300],
 };
 

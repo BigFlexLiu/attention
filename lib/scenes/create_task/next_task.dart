@@ -307,6 +307,22 @@ class _OnboardingPageState extends State<OnboardingPagePresenter> {
                               MaterialPageRoute(
                                   builder: (context) => const OnGoingTask()));
                         } else {
+                          if (_currentPage == 0 &&
+                              Provider.of<TaskProvider>(context, listen: false)
+                                  .task
+                                  .title
+                                  .isEmpty) {
+                            final snackBar = SnackBar(
+                              content: const Text('Please, define a task.'),
+                              action: SnackBarAction(
+                                label: 'Ok',
+                                onPressed: () {},
+                              ),
+                            );
+                            ScaffoldMessenger.of(context)
+                                .showSnackBar(snackBar);
+                            return;
+                          }
                           _pageController.animateToPage(_currentPage + 1,
                               curve: Curves.easeInOutCubic,
                               duration: const Duration(milliseconds: 250));
