@@ -312,15 +312,16 @@ class _OnboardingPageState extends State<OnboardingPagePresenter> {
                                   .task
                                   .title
                                   .isEmpty) {
-                            final snackBar = SnackBar(
-                              content: const Text('Please, define a task.'),
-                              action: SnackBarAction(
-                                label: 'Ok',
-                                onPressed: () {},
-                              ),
-                            );
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
+                            _showSnackBar(context, "Please enter a title");
+                            return;
+                          }
+                          if (_currentPage == 1 &&
+                              Provider.of<TaskProvider>(context, listen: false)
+                                      .task
+                                      .duration ==
+                                  Duration.zero) {
+                            _showSnackBar(
+                                context, "A task should not be 0s long");
                             return;
                           }
                           _pageController.animateToPage(_currentPage + 1,
@@ -350,6 +351,17 @@ class _OnboardingPageState extends State<OnboardingPagePresenter> {
         ),
       ),
     );
+  }
+
+  void _showSnackBar(BuildContext context, String text) {
+    final snackBar = SnackBar(
+      content: Text(text),
+      action: SnackBarAction(
+        label: 'Ok',
+        onPressed: () {},
+      ),
+    );
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 }
 
