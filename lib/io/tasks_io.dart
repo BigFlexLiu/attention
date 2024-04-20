@@ -16,6 +16,11 @@ Future<File> get _currentTaskFile async {
   return File('$path/current_task.json');
 }
 
+Future<File> get _taskIdCounterFile async {
+  final path = await _localPath;
+  return File('$path/task_id_counter.json');
+}
+
 Future<File> get _pastTasksFile async {
   final path = await _localPath;
   return File('$path/past_tasks.json');
@@ -65,11 +70,33 @@ Future<List<Task>> readPastTasks() async {
 }
 
 Future<void> addAsPastTask(Task task) async {
-  final file = await _pastTasksFile;
   List<Task> allTasks = await readPastTasks();
   allTasks.add(task);
 
-  file.writeAsString(jsonEncode(allTasks));
+  writePastTasks(allTasks);
+}
+
+Future<void> writePastTasks(List<Task> tasks) async {
+  final file = await _pastTasksFile;
+
+  file.writeAsString(jsonEncode(tasks));
+}
+
+Future<void> completeTask(int? id) async {
+  if (id == null) {
+    return;
+  }
+  final List<Task> allTasks = await readPastTasks();
+
+  int? targetId = id;
+  while (targetId != null) {
+    final int taskIdx = allTasks.indexWhere((task) => task.id == targetId);
+
+    allTasks[taskIdx] = allTasks[taskIdx].copyWith(completed: true);
+
+    targetId = allTasks[taskIdx].parentId;
+  }
+  writePastTasks(allTasks);
 }
 
 /*
@@ -77,8 +104,7 @@ Future<void> addAsPastTask(Task task) async {
 */
 Future<int> readTaskIdCounter() async {
   try {
-    final path = await _localPath;
-    final file = File('$path/task_id_counter.json');
+    final file = await _taskIdCounterFile;
 
     if (!await file.exists()) {
       return 0;
@@ -93,10 +119,10 @@ Future<int> readTaskIdCounter() async {
 }
 
 Future<void> incrementTaskIdCounter() async {
-  final path = await _localPath;
-  final file = File('$path/task_id_counter.json');
+  final file = await _taskIdCounterFile;
 
   if (!await file.exists()) {
+    file.writeAsString("0");
     return;
   }
   final String contents = await file.readAsString();
@@ -109,10 +135,12 @@ Future<void> incrementTaskIdCounter() async {
 /*
   Testing
 */
-Future<File> clearPastTasks() async {
-  final file = await _pastTasksFile;
+Future<void> deletePastTasks() async {
+  final taskFile = await _pastTasksFile;
+  final idFile = await _taskIdCounterFile;
 
-  return file.writeAsString(jsonEncode([]));
+  idFile.writeAsString("0");
+  taskFile.writeAsString(jsonEncode([]));
 }
 
 Future<File> deleteCurrentTask() async {

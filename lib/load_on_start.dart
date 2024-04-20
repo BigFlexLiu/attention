@@ -9,6 +9,7 @@ Future<void> checkFirstLaunchAndUpdate() async {
   bool isFirstLaunch = prefs.getBool('isFirstLaunch') ?? true;
 
   // await deleteAllNotes();
+  // await deletePastTasks();
   // await deleteAllNoteFiles();
   // await loadYourDataIntoLocalStorage();
   if (isFirstLaunch) {

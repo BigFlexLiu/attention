@@ -1,4 +1,4 @@
-import 'package:attention/io/io_functions.dart';
+import 'package:attention/io/tasks_io.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../models/problem_solution.dart';
@@ -118,11 +118,6 @@ class TaskProvider extends ChangeNotifier {
     saveChange();
   }
 
-  void setTaskCompleted(bool completed) {
-    _task = _task.copyWith(completed: completed);
-    saveChange();
-  }
-
   void updateReflection(String question, String answer) {
     _task =
         _task.copyWith(reflectionQuestion: question, reflectionAnswer: answer);
@@ -131,6 +126,7 @@ class TaskProvider extends ChangeNotifier {
 
   void complete() {
     _task = _task.copyWith(completed: true);
+    completeTask(_task.parentId);
     saveChange();
   }
 
