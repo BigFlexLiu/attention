@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../provider/task_provider.dart';
-import '../../theme.dart';
+import '../../theme/theme.dart';
 
 class Steps extends StatefulWidget {
   const Steps({super.key});

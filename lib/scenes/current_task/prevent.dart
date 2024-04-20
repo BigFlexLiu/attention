@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 
 import '../../models/problem_solution.dart';
 import '../../provider/task_provider.dart';
-import '../../theme.dart';
+import '../../theme/theme.dart';
 
 class Prevent extends StatelessWidget {
   const Prevent({super.key});

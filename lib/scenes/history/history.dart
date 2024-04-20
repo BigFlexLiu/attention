@@ -21,6 +21,14 @@ class _HistoryState extends State<History> {
   late Future<List<Task>> previousTasks;
   Filter currentFilter = Filter.all;
 
+  int repaintTrigger = 0;
+
+  void triggerRepaint() {
+    setState(() {
+      repaintTrigger++;
+    });
+  }
+
   final filterDisplay = {
     Filter.all: FilterDetails(Icons.list, "Show All"),
     Filter.completed: FilterDetails(Icons.check_circle, "Show Completed"),

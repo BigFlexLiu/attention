@@ -1,6 +1,5 @@
-
 import 'package:attention/scenes/current_task/reflection.dart';
-import 'package:attention/theme.dart';
+import 'package:attention/theme/theme.dart';
 import 'package:attention/util/services.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

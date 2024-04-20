@@ -7,7 +7,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/todo_note.dart';
-import '../../theme.dart';
+import '../../theme/theme.dart';
 import '../../util/util.dart';
 
 const showSnackBar = false;

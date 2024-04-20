@@ -8,7 +8,7 @@ import 'package:attention/scenes/note/empty_note.dart';
 import 'package:attention/scenes/note/hang_note_time_selection.dart';
 import 'package:attention/scenes/note/todo_note_edit.dart';
 import 'package:attention/scenes/note/todonote_view.dart';
-import 'package:attention/theme.dart';
+import 'package:attention/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/todo_note.dart';

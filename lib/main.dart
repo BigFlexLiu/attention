@@ -4,6 +4,7 @@ import 'package:attention/scenes/create_task/next_task.dart';
 import 'package:attention/scenes/current_task/ongoing_task.dart';
 import 'package:attention/scenes/history/history.dart';
 import 'package:attention/scenes/note/notes_menu.dart';
+import 'package:attention/theme/circle_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
@@ -109,26 +110,38 @@ class _MyHomePageState extends State<MyHomePage> {
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: Text(widget.title),
         ),
-        body: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              const HangNotesGallery(),
-              taskWidget,
-              OptionButton("History", () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const History(),
+        body: CustomPaint(
+          painter: CirclePainter(),
+          child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                const HangNotesGallery(),
+                Container(
+                  padding: const EdgeInsets.all(20),
+                  decoration: const BoxDecoration(
+                      shape: BoxShape.circle, color: Colors.white),
+                  child: Column(
+                    children: [
+                      taskWidget,
+                      OptionButton("History", () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const History(),
+                          ),
+                        );
+                      }),
+                      OptionButton("Notes", () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const NotesMenu(),
+                          ),
+                        );
+                      }),
+                    ],
                   ),
-                );
-              }),
-              OptionButton("Notes", () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => const NotesMenu(),
-                  ),
-                );
-              }),
-            ]));
+                )
+              ]),
+        ));
   }
 }
 
@@ -144,7 +157,6 @@ class OptionButton extends StatelessWidget {
       onPressed: onClick,
       child: Text(
         text,
-        style: Theme.of(context).textTheme.bodyLarge,
       ),
     );
   }

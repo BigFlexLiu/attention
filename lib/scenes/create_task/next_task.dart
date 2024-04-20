@@ -6,7 +6,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../provider/task_provider.dart';
-import '../../theme.dart';
+import '../../theme/circle_painter.dart';
+import '../../theme/theme.dart';
 import '../../util/services.dart';
 
 class NextTask extends StatefulWidget {
@@ -142,211 +143,218 @@ class _OnboardingPageState extends State<OnboardingPagePresenter> {
         duration: const Duration(milliseconds: 250),
         color: widget.pages[_currentPage].bgColor,
         child: SafeArea(
-          child: Column(
-            children: [
-              Expanded(
-                // Pageview to render each page
-                child: PageView.builder(
-                  controller: _pageController,
-                  itemCount: widget.pages.length,
-                  onPageChanged: (idx) {
-                    // Change current page when pageview changes
-                    setState(() {
-                      _currentPage = idx;
-                    });
-                  },
-                  itemBuilder: (context, idx) {
-                    final item = widget.pages[idx];
-                    return Column(
-                      children: [
-                        Expanded(
-                            child: Column(children: [
-                          Padding(
-                            padding: const EdgeInsets.all(32.0),
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Text(item.title,
+          child: CustomPaint(
+            painter: CirclePainter(),
+            child: Column(
+              children: [
+                Expanded(
+                  // Pageview to render each page
+                  child: PageView.builder(
+                    controller: _pageController,
+                    itemCount: widget.pages.length,
+                    onPageChanged: (idx) {
+                      // Change current page when pageview changes
+                      setState(() {
+                        _currentPage = idx;
+                      });
+                    },
+                    itemBuilder: (context, idx) {
+                      final item = widget.pages[idx];
+                      return Column(
+                        children: [
+                          Expanded(
+                              child: Column(children: [
+                            Padding(
+                              padding: const EdgeInsets.all(32.0),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      Text(item.title,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .titleLarge
+                                              ?.copyWith(
+                                                fontWeight: FontWeight.bold,
+                                                color: item.textColor,
+                                              )),
+                                      if (item.hint != null)
+                                        IconButton(
+                                            onPressed: () {
+                                              showDialog(
+                                                  context: context,
+                                                  builder:
+                                                      (BuildContext context) {
+                                                    return AlertDialog(
+                                                      title: const Text("Hint"),
+                                                      content: Text(item.hint!),
+                                                      actions: <Widget>[
+                                                        TextButton(
+                                                          onPressed: () {
+                                                            Navigator.of(
+                                                                    context)
+                                                                .pop();
+                                                          },
+                                                          child: const Text(
+                                                              'Close'),
+                                                        ),
+                                                      ],
+                                                    );
+                                                  });
+                                            },
+                                            icon: Icon(Icons.help,
+                                                color: invertColor(
+                                                    item.textColor)))
+                                    ],
+                                  ),
+                                  Container(
+                                    constraints:
+                                        const BoxConstraints(maxWidth: 280),
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 24.0, vertical: 8.0),
+                                    child: Text(item.description,
+                                        textAlign: TextAlign.center,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .titleLarge
+                                            .bodyMedium
                                             ?.copyWith(
-                                              fontWeight: FontWeight.bold,
                                               color: item.textColor,
                                             )),
-                                    if (item.hint != null)
-                                      IconButton(
-                                          onPressed: () {
-                                            showDialog(
-                                                context: context,
-                                                builder:
-                                                    (BuildContext context) {
-                                                  return AlertDialog(
-                                                    title: const Text("Hint"),
-                                                    content: Text(item.hint!),
-                                                    actions: <Widget>[
-                                                      TextButton(
-                                                        onPressed: () {
-                                                          Navigator.of(context)
-                                                              .pop();
-                                                        },
-                                                        child:
-                                                            const Text('Close'),
-                                                      ),
-                                                    ],
-                                                  );
-                                                });
-                                          },
-                                          icon: Icon(Icons.help,
-                                              color:
-                                                  invertColor(item.textColor)))
-                                  ],
-                                ),
-                                Container(
-                                  constraints:
-                                      const BoxConstraints(maxWidth: 280),
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 24.0, vertical: 8.0),
-                                  child: Text(item.description,
-                                      textAlign: TextAlign.center,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium
-                                          ?.copyWith(
-                                            color: item.textColor,
-                                          )),
-                                ),
-                              ],
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          Expanded(
-                            child: Padding(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 32),
-                              child: item.inputWidget,
+                            Expanded(
+                              child: Padding(
+                                padding:
+                                    const EdgeInsets.symmetric(horizontal: 32),
+                                child: item.inputWidget,
+                              ),
+                            )
+                          ])),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+
+                // Current page indicator
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: widget.pages
+                      .map((item) => AnimatedContainer(
+                            duration: const Duration(milliseconds: 250),
+                            width: _currentPage == widget.pages.indexOf(item)
+                                ? 30
+                                : 8,
+                            height: 8,
+                            margin: const EdgeInsets.all(2.0),
+                            decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10.0)),
+                          ))
+                      .toList(),
+                ),
+
+                // Bottom buttons
+                SizedBox(
+                  height: 100,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      TextButton(
+                        style: TextButton.styleFrom(
+                            visualDensity: VisualDensity.comfortable,
+                            foregroundColor: Colors.white,
+                            textStyle: const TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold)),
+                        onPressed: () {
+                          if (_currentPage == 0) {
+                            Navigator.pop(context);
+                          } else {
+                            _pageController.animateToPage(_currentPage - 1,
+                                curve: Curves.easeInOutCubic,
+                                duration: const Duration(milliseconds: 250));
+                          }
+                        },
+                        child: Row(
+                          children: [
+                            Icon(_currentPage == 0
+                                ? Icons.home
+                                : Icons.arrow_back),
+                            const SizedBox(width: 8),
+                            const Text("Back"),
+                          ],
+                        ),
+                      ),
+                      TextButton(
+                        style: TextButton.styleFrom(
+                            visualDensity: VisualDensity.comfortable,
+                            foregroundColor: Colors.white,
+                            textStyle: const TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold)),
+                        onPressed: () async {
+                          if (_currentPage == widget.pages.length - 1) {
+                            Provider.of<TaskProvider>(context, listen: false)
+                                .setTaskStartTime(DateTime.now());
+
+                            final durationInSeconds = Provider.of<TaskProvider>(
+                                    context,
+                                    listen: false)
+                                .task
+                                .duration!
+                                .inSeconds;
+                            PlatformService.startService(durationInSeconds);
+
+                            Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => const OnGoingTask()));
+                          } else {
+                            if (_currentPage == 0 &&
+                                Provider.of<TaskProvider>(context,
+                                        listen: false)
+                                    .task
+                                    .title
+                                    .isEmpty) {
+                              _showSnackBar(context, "Please enter a title");
+                              return;
+                            }
+                            if (_currentPage == 1 &&
+                                Provider.of<TaskProvider>(context,
+                                            listen: false)
+                                        .task
+                                        .duration ==
+                                    Duration.zero) {
+                              _showSnackBar(
+                                  context, "A task should not be 0s long");
+                              return;
+                            }
+                            _pageController.animateToPage(_currentPage + 1,
+                                curve: Curves.easeInOutCubic,
+                                duration: const Duration(milliseconds: 250));
+                          }
+                        },
+                        child: Row(
+                          children: [
+                            Text(
+                              _currentPage == widget.pages.length - 1
+                                  ? "Start"
+                                  : "Next",
                             ),
-                          )
-                        ])),
-                      ],
-                    );
-                  },
-                ),
-              ),
-
-              // Current page indicator
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: widget.pages
-                    .map((item) => AnimatedContainer(
-                          duration: const Duration(milliseconds: 250),
-                          width: _currentPage == widget.pages.indexOf(item)
-                              ? 30
-                              : 8,
-                          height: 8,
-                          margin: const EdgeInsets.all(2.0),
-                          decoration: BoxDecoration(
-                              color: Colors.white,
-                              borderRadius: BorderRadius.circular(10.0)),
-                        ))
-                    .toList(),
-              ),
-
-              // Bottom buttons
-              SizedBox(
-                height: 100,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    TextButton(
-                      style: TextButton.styleFrom(
-                          visualDensity: VisualDensity.comfortable,
-                          foregroundColor: Colors.white,
-                          textStyle: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold)),
-                      onPressed: () {
-                        if (_currentPage == 0) {
-                          Navigator.pop(context);
-                        } else {
-                          _pageController.animateToPage(_currentPage - 1,
-                              curve: Curves.easeInOutCubic,
-                              duration: const Duration(milliseconds: 250));
-                        }
-                      },
-                      child: Row(
-                        children: [
-                          Icon(_currentPage == 0
-                              ? Icons.home
-                              : Icons.arrow_back),
-                          const SizedBox(width: 8),
-                          const Text("Back"),
-                        ],
+                            const SizedBox(width: 8),
+                            Icon(_currentPage == widget.pages.length - 1
+                                ? Icons.done
+                                : Icons.arrow_forward),
+                          ],
+                        ),
                       ),
-                    ),
-                    TextButton(
-                      style: TextButton.styleFrom(
-                          visualDensity: VisualDensity.comfortable,
-                          foregroundColor: Colors.white,
-                          textStyle: const TextStyle(
-                              fontSize: 16, fontWeight: FontWeight.bold)),
-                      onPressed: () async {
-                        if (_currentPage == widget.pages.length - 1) {
-                          Provider.of<TaskProvider>(context, listen: false)
-                              .setTaskStartTime(DateTime.now());
-
-                          final durationInSeconds =
-                              Provider.of<TaskProvider>(context, listen: false)
-                                  .task
-                                  .duration!
-                                  .inSeconds;
-                          PlatformService.startService(durationInSeconds);
-
-                          Navigator.pushReplacement(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const OnGoingTask()));
-                        } else {
-                          if (_currentPage == 0 &&
-                              Provider.of<TaskProvider>(context, listen: false)
-                                  .task
-                                  .title
-                                  .isEmpty) {
-                            _showSnackBar(context, "Please enter a title");
-                            return;
-                          }
-                          if (_currentPage == 1 &&
-                              Provider.of<TaskProvider>(context, listen: false)
-                                      .task
-                                      .duration ==
-                                  Duration.zero) {
-                            _showSnackBar(
-                                context, "A task should not be 0s long");
-                            return;
-                          }
-                          _pageController.animateToPage(_currentPage + 1,
-                              curve: Curves.easeInOutCubic,
-                              duration: const Duration(milliseconds: 250));
-                        }
-                      },
-                      child: Row(
-                        children: [
-                          Text(
-                            _currentPage == widget.pages.length - 1
-                                ? "Start"
-                                : "Next",
-                          ),
-                          const SizedBox(width: 8),
-                          Icon(_currentPage == widget.pages.length - 1
-                              ? Icons.done
-                              : Icons.arrow_forward),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            ],
+                    ],
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),

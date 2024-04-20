@@ -3,6 +3,7 @@ import 'package:attention/scenes/current_task/steps.dart';
 import 'package:attention/scenes/current_task/timer.dart';
 import 'package:flutter/material.dart';
 
+import '../../theme/falling_circle_animator.dart';
 
 class OnGoingTask extends StatefulWidget {
   const OnGoingTask({super.key});
@@ -27,7 +28,8 @@ class _OnGoingTaskState extends State<OnGoingTask> {
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: Text(_NavBarItems[_selectedIndex]["name"] as String),
         ),
-        body: _NavBarItems[_selectedIndex]["widget"] as Widget,
+        body: FallingCircleAnimator(
+            child: _NavBarItems[_selectedIndex]["widget"] as Widget),
         bottomNavigationBar: BottomNavigationBar(
           items: const <BottomNavigationBarItem>[
             BottomNavigationBarItem(
