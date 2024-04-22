@@ -21,7 +21,7 @@ Task _$TaskFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$Task {
   int get id => throw _privateConstructorUsedError;
-  int? get parentId => throw _privateConstructorUsedError;
+  Task? get parentTask => throw _privateConstructorUsedError;
   String get title => throw _privateConstructorUsedError;
   Duration? get duration => throw _privateConstructorUsedError;
   DateTime? get startTime => throw _privateConstructorUsedError;
@@ -47,7 +47,7 @@ abstract class $TaskCopyWith<$Res> {
   @useResult
   $Res call(
       {int id,
-      int? parentId,
+      Task? parentTask,
       String title,
       Duration? duration,
       DateTime? startTime,
@@ -59,6 +59,8 @@ abstract class $TaskCopyWith<$Res> {
       bool ended,
       String reflectionQuestion,
       String reflectionAnswer});
+
+  $TaskCopyWith<$Res>? get parentTask;
 }
 
 /// @nodoc
@@ -75,7 +77,7 @@ class _$TaskCopyWithImpl<$Res, $Val extends Task>
   @override
   $Res call({
     Object? id = null,
-    Object? parentId = freezed,
+    Object? parentTask = freezed,
     Object? title = null,
     Object? duration = freezed,
     Object? startTime = freezed,
@@ -93,10 +95,10 @@ class _$TaskCopyWithImpl<$Res, $Val extends Task>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int,
-      parentId: freezed == parentId
-          ? _value.parentId
-          : parentId // ignore: cast_nullable_to_non_nullable
-              as int?,
+      parentTask: freezed == parentTask
+          ? _value.parentTask
+          : parentTask // ignore: cast_nullable_to_non_nullable
+              as Task?,
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -143,6 +145,18 @@ class _$TaskCopyWithImpl<$Res, $Val extends Task>
               as String,
     ) as $Val);
   }
+
+  @override
+  @pragma('vm:prefer-inline')
+  $TaskCopyWith<$Res>? get parentTask {
+    if (_value.parentTask == null) {
+      return null;
+    }
+
+    return $TaskCopyWith<$Res>(_value.parentTask!, (value) {
+      return _then(_value.copyWith(parentTask: value) as $Val);
+    });
+  }
 }
 
 /// @nodoc
@@ -154,7 +168,7 @@ abstract class _$$TaskImplCopyWith<$Res> implements $TaskCopyWith<$Res> {
   @useResult
   $Res call(
       {int id,
-      int? parentId,
+      Task? parentTask,
       String title,
       Duration? duration,
       DateTime? startTime,
@@ -166,6 +180,9 @@ abstract class _$$TaskImplCopyWith<$Res> implements $TaskCopyWith<$Res> {
       bool ended,
       String reflectionQuestion,
       String reflectionAnswer});
+
+  @override
+  $TaskCopyWith<$Res>? get parentTask;
 }
 
 /// @nodoc
@@ -179,7 +196,7 @@ class __$$TaskImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? id = null,
-    Object? parentId = freezed,
+    Object? parentTask = freezed,
     Object? title = null,
     Object? duration = freezed,
     Object? startTime = freezed,
@@ -197,10 +214,10 @@ class __$$TaskImplCopyWithImpl<$Res>
           ? _value.id
           : id // ignore: cast_nullable_to_non_nullable
               as int,
-      parentId: freezed == parentId
-          ? _value.parentId
-          : parentId // ignore: cast_nullable_to_non_nullable
-              as int?,
+      parentTask: freezed == parentTask
+          ? _value.parentTask
+          : parentTask // ignore: cast_nullable_to_non_nullable
+              as Task?,
       title: null == title
           ? _value.title
           : title // ignore: cast_nullable_to_non_nullable
@@ -254,7 +271,7 @@ class __$$TaskImplCopyWithImpl<$Res>
 class _$TaskImpl with DiagnosticableTreeMixin implements _Task {
   const _$TaskImpl(
       {required this.id,
-      required this.parentId,
+      required this.parentTask,
       required this.title,
       required this.duration,
       required this.startTime,
@@ -275,7 +292,7 @@ class _$TaskImpl with DiagnosticableTreeMixin implements _Task {
   @override
   final int id;
   @override
-  final int? parentId;
+  final Task? parentTask;
   @override
   final String title;
   @override
@@ -314,7 +331,7 @@ class _$TaskImpl with DiagnosticableTreeMixin implements _Task {
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'Task(id: $id, parentId: $parentId, title: $title, duration: $duration, startTime: $startTime, steps: $steps, personalImportance: $personalImportance, problemSolutions: $problemSolutions, reward: $reward, completed: $completed, ended: $ended, reflectionQuestion: $reflectionQuestion, reflectionAnswer: $reflectionAnswer)';
+    return 'Task(id: $id, parentTask: $parentTask, title: $title, duration: $duration, startTime: $startTime, steps: $steps, personalImportance: $personalImportance, problemSolutions: $problemSolutions, reward: $reward, completed: $completed, ended: $ended, reflectionQuestion: $reflectionQuestion, reflectionAnswer: $reflectionAnswer)';
   }
 
   @override
@@ -323,7 +340,7 @@ class _$TaskImpl with DiagnosticableTreeMixin implements _Task {
     properties
       ..add(DiagnosticsProperty('type', 'Task'))
       ..add(DiagnosticsProperty('id', id))
-      ..add(DiagnosticsProperty('parentId', parentId))
+      ..add(DiagnosticsProperty('parentTask', parentTask))
       ..add(DiagnosticsProperty('title', title))
       ..add(DiagnosticsProperty('duration', duration))
       ..add(DiagnosticsProperty('startTime', startTime))
@@ -343,8 +360,8 @@ class _$TaskImpl with DiagnosticableTreeMixin implements _Task {
         (other.runtimeType == runtimeType &&
             other is _$TaskImpl &&
             (identical(other.id, id) || other.id == id) &&
-            (identical(other.parentId, parentId) ||
-                other.parentId == parentId) &&
+            (identical(other.parentTask, parentTask) ||
+                other.parentTask == parentTask) &&
             (identical(other.title, title) || other.title == title) &&
             (identical(other.duration, duration) ||
                 other.duration == duration) &&
@@ -370,7 +387,7 @@ class _$TaskImpl with DiagnosticableTreeMixin implements _Task {
   int get hashCode => Object.hash(
       runtimeType,
       id,
-      parentId,
+      parentTask,
       title,
       duration,
       startTime,
@@ -400,7 +417,7 @@ class _$TaskImpl with DiagnosticableTreeMixin implements _Task {
 abstract class _Task implements Task {
   const factory _Task(
       {required final int id,
-      required final int? parentId,
+      required final Task? parentTask,
       required final String title,
       required final Duration? duration,
       required final DateTime? startTime,
@@ -418,7 +435,7 @@ abstract class _Task implements Task {
   @override
   int get id;
   @override
-  int? get parentId;
+  Task? get parentTask;
   @override
   String get title;
   @override

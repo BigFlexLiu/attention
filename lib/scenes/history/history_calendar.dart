@@ -1,6 +1,7 @@
-
+import 'package:attention/provider/task_filter_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 import '../../models/task.dart';
@@ -15,8 +16,15 @@ class HistoryCalendar extends StatefulWidget {
 }
 
 class _HistoryCalendarState extends State<HistoryCalendar> {
-  DateTime _selectedDay = DateTime.now();
+  DateTime? _selectedDay = DateTime.now();
+  DateTime? _rangeStart;
+  DateTime? _rangeEnd;
+  RangeSelectionMode _rangeSelectionMode = RangeSelectionMode.disabled;
   CalendarFormat _calendarFormat = CalendarFormat.month;
+
+  List<Task> _selectedTasks = [];
+
+  bool isSingleSelect = true;
   Map tasks = {};
 
   @override
@@ -31,8 +39,21 @@ class _HistoryCalendarState extends State<HistoryCalendar> {
     }
   }
 
-  List<Task> _getTasksForDay(DateTime day) {
+  List<Task> _getTasksForDay(DateTime? day) {
     return tasks[day] ?? [];
+  }
+
+  List<Task> _getTasksForRange(DateTime? start, DateTime? end) {
+    List<Task> tasksInRange = [];
+    for (var task in widget.tasks) {
+      if (task.startTime!.isAfter(end!)) {
+        break;
+      }
+      if (task.startTime!.isAfter(start!) && task.startTime!.isBefore(end)) {
+        tasksInRange.add(task);
+      }
+    }
+    return tasksInRange;
   }
 
   defaultcalendarBuilder(context, day, focusedDay, isSelected) {
@@ -72,10 +93,46 @@ class _HistoryCalendarState extends State<HistoryCalendar> {
 
   @override
   Widget build(BuildContext context) {
-    final firstDay = widget.tasks.first.startTime!;
+    Provider.of<TaskFilterProvider>(context, listen: false);
+    final firstDay =
+        widget.tasks.isEmpty ? DateTime.now() : widget.tasks.first.startTime!;
     return Scaffold(
       appBar: AppBar(
         title: const Text("History Calendar"),
+        actions: [
+          IconButton(
+            icon: Icon(isSingleSelect ? Icons.event : Icons.date_range),
+            tooltip:
+                isSingleSelect ? "Single Date Select" : "Range Date Select",
+            onPressed: () {
+              setState(() {
+                isSingleSelect = !isSingleSelect;
+                if (isSingleSelect) {
+                  _rangeSelectionMode = RangeSelectionMode.disabled;
+                  _rangeStart = null;
+                  _rangeEnd = null;
+                } else {
+                  _rangeSelectionMode = RangeSelectionMode.toggledOn;
+                  _selectedDay = null;
+                }
+              });
+            },
+          ),
+          IconButton(
+              onPressed: () {
+                final taskFilterProvider =
+                    Provider.of<TaskFilterProvider>(context, listen: false);
+                if (isSingleSelect) {
+                  taskFilterProvider.setTimeBoundFilter(
+                      _selectedDay!, _selectedDay?.add(const Duration(days: 1)));
+                } else if (_rangeStart != null && _rangeEnd != null) {
+                  taskFilterProvider.setTimeBoundFilter(
+                      _rangeStart!, _rangeEnd!.add(const Duration(days: 1)));
+                }
+                Navigator.of(context).pop();
+              },
+              icon: const Icon(Icons.search))
+        ],
       ),
       body: Column(
         children: [
@@ -83,6 +140,9 @@ class _HistoryCalendarState extends State<HistoryCalendar> {
             focusedDay: DateTime.now(),
             firstDay: firstDay,
             lastDay: DateTime.now().add(const Duration(days: 365)),
+            rangeStartDay: _rangeStart,
+            rangeEndDay: _rangeEnd,
+            rangeSelectionMode: _rangeSelectionMode,
             startingDayOfWeek: StartingDayOfWeek.monday,
             selectedDayPredicate: (day) {
               return isSameDay(_selectedDay, day);
@@ -90,6 +150,20 @@ class _HistoryCalendarState extends State<HistoryCalendar> {
             onDaySelected: (selectedDay, focusedDay) {
               setState(() {
                 _selectedDay = selectedDay;
+                _selectedTasks = _getTasksForDay(selectedDay);
+              });
+            },
+            onRangeSelected: (start, end, focusedDay) {
+              setState(() {
+                _rangeStart = start;
+                _rangeEnd = end;
+                _rangeSelectionMode = RangeSelectionMode.toggledOn;
+
+                if (start != null && end != null) {
+                  _selectedTasks = _getTasksForRange(start, end);
+                } else {
+                  _selectedTasks = [];
+                }
               });
             },
             calendarFormat: _calendarFormat,
@@ -115,7 +189,7 @@ class _HistoryCalendarState extends State<HistoryCalendar> {
           Expanded(
             child: ListView(
               children: [
-                for (var task in _getTasksForDay(_selectedDay))
+                for (var task in _selectedTasks)
                   ListTile(
                     title: Text(task.title),
                     subtitle: Text(

@@ -23,7 +23,6 @@ class TodoNoteView extends StatefulWidget {
 
 class TodoNoteViewState extends State<TodoNoteView>
     with WidgetsBindingObserver {
-  final String _taskTitle = "Default Title";
   late TreeNode treeNode;
 
   @override

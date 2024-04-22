@@ -1,4 +1,5 @@
 import 'package:attention/provider/hangedNotesProvider.dart';
+import 'package:attention/provider/task_filter_provider.dart';
 import 'package:attention/provider/task_provider.dart';
 import 'package:attention/scenes/create_task/next_task.dart';
 import 'package:attention/scenes/current_task/ongoing_task.dart';
@@ -6,16 +7,10 @@ import 'package:attention/scenes/history/history.dart';
 import 'package:attention/scenes/note/notes_menu.dart';
 import 'package:attention/theme/circle_painter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:provider/provider.dart';
 
 import 'hang_notes_gallery.dart';
 import 'load_on_start.dart';
-
-@pragma('vm:entry-point')
-void notificationTapBackground(NotificationResponse notificationResponse) {
-  // handle action
-}
 
 void main() async {
   WidgetsFlutterBinding
@@ -30,6 +25,7 @@ void main() async {
     MultiProvider(providers: [
       ChangeNotifierProvider(create: (context) => taskProvider),
       ChangeNotifierProvider(create: (context) => hangedNotesProvider),
+      ChangeNotifierProvider(create: (context) => TaskFilterProvider())
     ], child: const MyApp()),
   );
 }
@@ -136,7 +132,7 @@ class _MyHomePageState extends State<MyHomePage> {
                             builder: (context) => const NotesMenu(),
                           ),
                         );
-                      }),
+                      })
                     ],
                   ),
                 )

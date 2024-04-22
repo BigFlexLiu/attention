@@ -71,6 +71,10 @@ Future<List<Task>> readPastTasks() async {
 
 Future<void> addAsPastTask(Task task) async {
   List<Task> allTasks = await readPastTasks();
+  // Remove parent task if it exists
+  if (task.parentTask != null) {
+    allTasks.removeWhere((element) => element.id == task.parentTask!.id);
+  }
   allTasks.add(task);
 
   writePastTasks(allTasks);
@@ -80,23 +84,6 @@ Future<void> writePastTasks(List<Task> tasks) async {
   final file = await _pastTasksFile;
 
   file.writeAsString(jsonEncode(tasks));
-}
-
-Future<void> completeTask(int? id) async {
-  if (id == null) {
-    return;
-  }
-  final List<Task> allTasks = await readPastTasks();
-
-  int? targetId = id;
-  while (targetId != null) {
-    final int taskIdx = allTasks.indexWhere((task) => task.id == targetId);
-
-    allTasks[taskIdx] = allTasks[taskIdx].copyWith(completed: true);
-
-    targetId = allTasks[taskIdx].parentId;
-  }
-  writePastTasks(allTasks);
 }
 
 /*

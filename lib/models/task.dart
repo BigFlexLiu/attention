@@ -10,7 +10,7 @@ part 'task.g.dart';
 abstract class Task with _$Task {
   const factory Task({
     required int id,
-    required int? parentId,
+    required Task? parentTask,
     required String title,
     required Duration? duration,
     required DateTime? startTime,
@@ -28,7 +28,7 @@ abstract class Task with _$Task {
 
   factory Task.defaultsetup() => const Task(
         id: 0,
-        parentId: null,
+        parentTask: null,
         title: "",
         duration: Duration(minutes: 25),
         startTime: null,
@@ -44,7 +44,7 @@ abstract class Task with _$Task {
 
   factory Task.testsetup() => Task(
         id: 0,
-        parentId: null,
+        parentTask: null,
         title: "Sample Task",
         duration: const Duration(minutes: 30),
         startTime: DateTime.now(),

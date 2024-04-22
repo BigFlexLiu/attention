@@ -40,8 +40,8 @@ class TaskProvider extends ChangeNotifier {
     saveChange();
   }
 
-  void setTaskParentId(int? parentId) {
-    _task = _task.copyWith(parentId: parentId);
+  void setTaskParentTask(Task? parentTask) {
+    _task = _task.copyWith(parentTask: parentTask);
     saveChange();
   }
 
@@ -126,7 +126,6 @@ class TaskProvider extends ChangeNotifier {
 
   void complete() {
     _task = _task.copyWith(completed: true);
-    completeTask(_task.parentId);
     saveChange();
   }
 
@@ -141,10 +140,10 @@ class TaskProvider extends ChangeNotifier {
     saveChange();
   }
 
-  void restartTask(parentId) async {
+  void restartTask(parentTask) async {
     _task = _task.copyWith(
         id: await readTaskIdCounter(),
-        parentId: parentId,
+        parentTask: parentTask,
         ended: false,
         completed: false,
         startTime: DateTime.now());

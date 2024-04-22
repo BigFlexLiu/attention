@@ -1,5 +1,6 @@
 import 'package:attention/io/tasks_io.dart';
 import 'package:attention/models/task.dart';
+import 'package:attention/provider/task_filter_provider.dart';
 import 'package:attention/scenes/create_task/next_task.dart';
 import 'package:attention/scenes/history/details.dart';
 import 'package:flutter/material.dart';
@@ -19,20 +20,13 @@ class History extends StatefulWidget {
 
 class _HistoryState extends State<History> {
   late Future<List<Task>> previousTasks;
-  Filter currentFilter = Filter.all;
-
-  int repaintTrigger = 0;
-
-  void triggerRepaint() {
-    setState(() {
-      repaintTrigger++;
-    });
-  }
+  int i = 0;
 
   final filterDisplay = {
-    Filter.all: FilterDetails(Icons.list, "Show All"),
-    Filter.completed: FilterDetails(Icons.check_circle, "Show Completed"),
-    Filter.incomplete: FilterDetails(Icons.cancel, "Show Incomplete"),
+    TaskStatusFilter.completed:
+        FilterDetails(Icons.check_circle, "Show Completed"),
+    TaskStatusFilter.all: FilterDetails(Icons.list, "Show All"),
+    TaskStatusFilter.incomplete: FilterDetails(Icons.cancel, "Show Incomplete"),
   };
 
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
@@ -40,7 +34,7 @@ class _HistoryState extends State<History> {
   @override
   void initState() {
     super.initState();
-    previousTasks = readPastTasks(); // Call your read function here
+    previousTasks = readPastTasks();
   }
 
   @override
@@ -53,7 +47,9 @@ class _HistoryState extends State<History> {
         } else if (snapshot.hasError) {
           return Center(child: Text("Error: ${snapshot.error}"));
         } else {
-          List<Task> tasks = _filterTasks(currentFilter, snapshot.data!);
+          final taskFilterProvider = Provider.of<TaskFilterProvider>(context);
+          final filter = taskFilterProvider.filter;
+          List<Task> tasks = filter.filterTasks(snapshot.data!);
           return Scaffold(
               key: _scaffoldKey,
               appBar: AppBar(
@@ -64,30 +60,23 @@ class _HistoryState extends State<History> {
                     icon: const Icon(Icons.calendar_month),
                     onPressed: () {
                       Navigator.of(context).push(MaterialPageRoute(
-                          builder:
-                              // (context) => TableComplexExample()));
-                              (context) => HistoryCalendar(snapshot.data!)));
+                          builder: (context) =>
+                              HistoryCalendar(snapshot.data!)));
                     },
                   ),
                   IconButton(
-                      tooltip: filterDisplay[currentFilter]!.title,
+                      tooltip: filterDisplay[filter.taskStatusFilter]!.title,
                       onPressed: () {
-                        setState(() {
-                          currentFilter = Filter.values[
-                              (currentFilter.index + 1) % Filter.values.length];
-                        });
+                        final newTaskStutus = TaskStatusFilter.values[
+                            (filter.taskStatusFilter.index + 1) %
+                                TaskStatusFilter.values.length];
+                        taskFilterProvider.setTaskStatusFilter(newTaskStutus);
                       },
-                      icon: Icon(filterDisplay[currentFilter]!.icon)),
+                      icon: Icon(filterDisplay[filter.taskStatusFilter]!.icon)),
                 ],
               ),
               body: ListView(
                   children: tasks.reversed.map((task) {
-                Duration duration = task.duration ?? Duration.zero;
-
-                final cardColor = task.completed
-                    ? Theme.of(context).colorScheme.primaryContainer
-                    : Theme.of(context).colorScheme.background;
-
                 return GestureDetector(
                     onLongPress: () {
                       if (!task.completed) {
@@ -106,7 +95,7 @@ class _HistoryState extends State<History> {
                                               Provider.of<TaskProvider>(context,
                                                   listen: false)
                                                 ..setTask(task)
-                                                ..restartTask(task.id);
+                                                ..restartTask(task);
                                               Navigator.of(context).pop();
                                               pop();
                                             },
@@ -115,8 +104,10 @@ class _HistoryState extends State<History> {
                                         TextButton(
                                             onPressed: () {
                                               Provider.of<TaskProvider>(context,
-                                                      listen: false)
-                                                  .setTask(task);
+                                                  listen: false)
+                                                ..setTask(task)
+                                                ..setTaskParentTask(task);
+
                                               Navigator.of(context).pop();
                                               Navigator.of(context)
                                                   .pushReplacement(
@@ -130,22 +121,7 @@ class _HistoryState extends State<History> {
                                 ));
                       }
                     },
-                    child: Card(
-                        color: cardColor,
-                        child: ExpansionTile(
-                          title: Text(task.title),
-                          subtitle: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                    "Started: ${fullDateDisplay(task.startTime!)}"),
-                                Text("Duration: ${durationDisplay(duration)}"),
-                                Text(task.personalImportance),
-                              ]),
-                          children: [
-                            DetailTabs(task),
-                          ],
-                        )));
+                    child: LayeredTaskCard(task));
               }).toList()));
         }
       },
@@ -155,22 +131,90 @@ class _HistoryState extends State<History> {
   void pop() {
     Navigator.pop(context);
   }
-
-  List<Task> _filterTasks(Filter filter, List<Task> tasks) {
-    if (filter == Filter.all) {
-      return tasks;
-    } else if (filter == Filter.completed) {
-      return tasks.where((task) => task.completed).toList();
-    } else {
-      return tasks.where((task) => !task.completed).toList();
-    }
-  }
 }
 
-enum Filter {
-  all,
-  completed,
-  incomplete,
+class LayeredTaskCard extends StatefulWidget {
+  LayeredTaskCard(this.task, {super.key});
+  Task task;
+
+  @override
+  State<LayeredTaskCard> createState() => _LayeredTaskCardState();
+}
+
+class _LayeredTaskCardState extends State<LayeredTaskCard> {
+  List<Task> children = [];
+  bool childrenVisible = false;
+
+  void fillChildren(Task task) {
+    if (task.parentTask != null) {
+      children.add(task.parentTask!);
+      fillChildren(task.parentTask!);
+    }
+  }
+
+  @override
+  void initState() {
+    fillChildren(widget.task);
+    // TODO: implement initState
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(children: [
+      TaskCard(
+          widget.task,
+          IconButton(
+            onPressed: () {
+              setState(() {
+                childrenVisible = !childrenVisible;
+              });
+            },
+            icon:
+                Icon(childrenVisible ? Icons.visibility_off : Icons.visibility),
+            tooltip: childrenVisible
+                ? "Show previous sessions"
+                : "Hide previous sessions",
+          )),
+      Visibility(
+        visible: childrenVisible,
+        child: Column(
+          children: children
+              .map((task) => TaskCard(
+                    task,
+                    const SizedBox(
+                      width: 0,
+                      height: 0,
+                    ),
+                  ))
+              .toList(),
+        ),
+      ),
+    ]);
+  }
+
+  Card TaskCard(task, trailing) {
+    final backgroundColor = task.completed
+        ? Theme.of(context).colorScheme.inversePrimary
+        : Theme.of(context).colorScheme.background;
+
+    Duration duration = task.duration ?? Duration.zero;
+    return Card(
+        color: backgroundColor,
+        child: ExpansionTile(
+          title: Text(task.title),
+          subtitle:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text("Started: ${fullDateDisplay(task.startTime!)}"),
+            Text("Duration: ${durationDisplay(duration)}"),
+            Text(task.personalImportance),
+          ]),
+          trailing: trailing,
+          children: [
+            DetailTabs(task),
+          ],
+        ));
+  }
 }
 
 class FilterDetails {
