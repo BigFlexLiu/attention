@@ -11,14 +11,14 @@ Future<void> checkFirstLaunchAndUpdate() async {
   // await deleteAllNotes();
   // await deletePastTasks();
   // await deleteAllNoteFiles();
-  // await loadYourDataIntoLocalStorage();
+  // await loadDefaultData();
   if (isFirstLaunch) {
-    loadYourDataIntoLocalStorage();
+    await loadDefaultData();
     await prefs.setBool('isFirstLaunch', false);
   }
 }
 
-Future<void> loadYourDataIntoLocalStorage() async {
+Future<void> loadDefaultData() async {
   final sampleTodoNote = TreeNode.root(data: "Default Todo Note")
     ..addAll([
       TreeNode(key: "0", data: "Hold to add child or delete")
@@ -36,5 +36,5 @@ Future<void> loadYourDataIntoLocalStorage() async {
   await addHangedNote(HangedNoteInfo(
       id: simpleNote[0].id,
       hangedAt: DateTime.now(),
-      hangUntil: DateTime.now()..add(const Duration(days: 1))));
+      hangUntil: DateTime.now().add(const Duration(days: 1))));
 }

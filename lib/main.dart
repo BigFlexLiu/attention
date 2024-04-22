@@ -111,29 +111,35 @@ class _MyHomePageState extends State<MyHomePage> {
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
-                const HangNotesGallery(),
-                Container(
-                  padding: const EdgeInsets.all(20),
-                  decoration: const BoxDecoration(
-                      shape: BoxShape.circle, color: Colors.white),
-                  child: Column(
-                    children: [
-                      taskWidget,
-                      OptionButton("History", () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const History(),
-                          ),
-                        );
-                      }),
-                      OptionButton("Notes", () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const NotesMenu(),
-                          ),
-                        );
-                      })
-                    ],
+                Expanded(
+                  child: Container(),
+                ),
+                Expanded(child: const HangNotesGallery(), flex: 10),
+                Expanded(
+                  flex: 4,
+                  child: Container(
+                    padding: const EdgeInsets.all(20),
+                    decoration: const BoxDecoration(
+                        shape: BoxShape.circle, color: Colors.white),
+                    child: Column(
+                      children: [
+                        taskWidget,
+                        OptionButton("History", () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const History(),
+                            ),
+                          );
+                        }),
+                        OptionButton("Notes", () {
+                          Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => const NotesMenu(),
+                            ),
+                          );
+                        })
+                      ],
+                    ),
                   ),
                 )
               ]),

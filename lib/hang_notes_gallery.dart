@@ -25,7 +25,8 @@ class HangNotesGallery extends StatelessWidget {
           return Container();
         }).toList(),
         options: CarouselOptions(
-          height: 400.0,
+          height: double.infinity,
+          // height: 400.0,
           enableInfiniteScroll: false,
         ));
   }
