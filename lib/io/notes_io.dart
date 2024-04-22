@@ -209,6 +209,14 @@ Future<List> readHangedNotes() async {
   return hangedNotes;
 }
 
+Future<void> deleteHangedNoteInfoById(int id) async {
+  final file = await _localPath;
+  final notes = await readHangedNotesInfo();
+  final filteredNotes = notes.where((note) => note.id != id).toList();
+
+  File('$file/$hanged_note_info_file').writeAsString(jsonEncode(filteredNotes));
+}
+
 // Resets
 Future<void> deleteAllNotes() async {
   final file = await _localPath;

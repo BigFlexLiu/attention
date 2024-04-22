@@ -1,5 +1,5 @@
-import 'package:attention/scenes/note/empty_note.dart';
-import 'package:attention/scenes/note/todo_note_edit.dart';
+import 'package:attention/scenes/note/simple_note_editor.dart';
+import 'package:attention/scenes/note/todo_note_editor.dart';
 import 'package:flutter/material.dart';
 
 class MakeNote extends StatelessWidget {
@@ -12,9 +12,10 @@ class MakeNote extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<Template> templates = [
-      Template("Empty Note", const Icon(Icons.add), EmptyNote(onNoteChanged)),
       Template(
-          "Todo Note", const Icon(Icons.list), TodoNoteEdit(onNoteChanged)),
+          "Empty Note", const Icon(Icons.add), SimpleNoteEditor(onNoteChanged)),
+      Template(
+          "Todo Note", const Icon(Icons.list), TodoNoteEditor(onNoteChanged)),
       // Template("Reflection Note", Icon(Icons.psychology), QANote()),
       // Template("Project Tree", Icon(Icons.park), ProjectTree()),
     ];

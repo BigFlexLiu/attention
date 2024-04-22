@@ -13,16 +13,16 @@ import '../../util/util.dart';
 const showSnackBar = false;
 const expandChildrenOnReady = true;
 
-class TodoNoteEdit extends StatefulWidget {
-  TodoNoteEdit(this.saveNote, {this.note, Key? key}) : super(key: key);
+class TodoNoteEditor extends StatefulWidget {
+  TodoNoteEditor(this.saveNote, {this.note, Key? key}) : super(key: key);
   VoidCallback saveNote;
   TodoNote? note;
 
   @override
-  TodoNoteEditState createState() => TodoNoteEditState();
+  TodoNoteEditorState createState() => TodoNoteEditorState();
 }
 
-class TodoNoteEditState extends State<TodoNoteEdit>
+class TodoNoteEditorState extends State<TodoNoteEditor>
     with WidgetsBindingObserver {
   final TextEditingController _textEdittingController = TextEditingController();
   final TextEditingController _TaskTitleController = TextEditingController();

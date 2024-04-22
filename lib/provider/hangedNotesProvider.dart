@@ -16,8 +16,8 @@ class HangedNotesProvider extends ChangeNotifier {
   void hangNote(note, hangUntil) async {
     // Update if exists
     for (var hangedNote in _hangedNotesInfo) {
-      if (hangedNote.id == note.id) {
-        editHangedNoteInfoById(note.id, hangUntil);
+      if (hangedNote.id == convertToInt(note.id)) {
+        await editHangedNoteInfoById(note.id, hangUntil);
         pullHangedNotes();
         return;
       }
@@ -33,6 +33,11 @@ class HangedNotesProvider extends ChangeNotifier {
 
   void editTodoNoteById(todoNote) async {
     await editTodoNote(todoNote);
+    pullHangedNotes();
+  }
+
+  void deleteHangedNoteById(id) async {
+    await deleteHangedNoteInfoById(id);
     pullHangedNotes();
   }
 

@@ -114,7 +114,7 @@ class _MyHomePageState extends State<MyHomePage> {
                 Expanded(
                   child: Container(),
                 ),
-                Expanded(child: const HangNotesGallery(), flex: 10),
+                const Expanded(flex: 10, child: HangNotesGallery()),
                 Expanded(
                   flex: 4,
                   child: Container(

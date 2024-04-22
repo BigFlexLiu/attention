@@ -3,6 +3,7 @@ import 'package:animated_tree_view/tree_view/tree_view.dart';
 import 'package:animated_tree_view/tree_view/widgets/expansion_indicator.dart';
 import 'package:animated_tree_view/tree_view/widgets/indent.dart';
 import 'package:attention/io/notes_io.dart';
+import 'package:attention/scenes/note/hang_note_time_selection.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/todo_note.dart';
@@ -58,7 +59,13 @@ class TodoNoteViewState extends State<TodoNoteView>
           title: Text(treeNode.data),
           actions: [
             IconButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) =>
+                              HangNoteTimeSelection(widget.note)));
+                },
                 icon: const Icon(Icons.photo_library),
                 tooltip: "Hang it"),
           ],
@@ -89,12 +96,6 @@ class _TodoNoteTreeState extends State<TodoNoteTree> {
               padding: const EdgeInsets.all(8),
             ),
         indentation: const Indentation(style: IndentStyle.squareJoint),
-        onItemTap: (item) {},
-        onTreeReady: (controller) {
-          if (expandChildrenOnReady) {
-            controller.expandAllChildren(widget.treeNode);
-          }
-        },
         builder: (context, node) => InkWell(
               onLongPress: () => showDialog(
                   context: context,

@@ -3,16 +3,17 @@ import 'package:flutter/material.dart';
 
 import '../../models/simple_note.dart';
 
-class EmptyNote extends StatefulWidget {
-  EmptyNote(this.onNoteSaved, {this.note, super.key});
+class SimpleNoteEditor extends StatefulWidget {
+  SimpleNoteEditor(this.onNoteSaved, {this.note, super.key});
   VoidCallback onNoteSaved;
   SimpleNote? note;
 
   @override
-  State<EmptyNote> createState() => _EmptyNoteState();
+  State<SimpleNoteEditor> createState() => _SimpleNoteEditorState();
 }
 
-class _EmptyNoteState extends State<EmptyNote> with WidgetsBindingObserver {
+class _SimpleNoteEditorState extends State<SimpleNoteEditor>
+    with WidgetsBindingObserver {
   final TextEditingController _titleEdittingController =
       TextEditingController();
   final TextEditingController _noteEdittingController = TextEditingController();
