@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:attention/provider/all_tasks_provider.dart';
 import 'package:attention/scenes/current_task/break.dart';
 import 'package:attention/scenes/current_task/ongoing_task.dart';
 import 'package:flutter/material.dart';
@@ -63,15 +64,16 @@ class _ReflectionState extends State<Reflection> {
               ),
               const SizedBox(width: 16),
               ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    PlatformService.cancelTimer();
-                    Provider.of<TaskProvider>(context, listen: false)
-                      ..updateReflection(question, reflectionController.text)
-                      ..endTask();
-                    Navigator.pushReplacement(context,
-                        MaterialPageRoute(builder: (context) => const Break()));
-                  });
+                onPressed: () async {
+                  PlatformService.cancelTimer();
+                  final taskProvider =
+                      Provider.of<TaskProvider>(context, listen: false)
+                        ..updateReflection(question, reflectionController.text);
+                  await taskProvider.endTask();
+                  Provider.of<AllTasksProvider>(context, listen: false)
+                      .reload();
+                  Navigator.pushReplacement(context,
+                      MaterialPageRoute(builder: (context) => const Break()));
                 },
                 child: const Text("Submit"),
               ),

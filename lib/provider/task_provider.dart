@@ -129,14 +129,14 @@ class TaskProvider extends ChangeNotifier {
     saveChange();
   }
 
-  void addTaskToHistory() {
-    addAsPastTask(_task);
+  Future<void> addTaskToHistory() async {
+    await addAsPastTask(_task);
   }
 
-  void endTask() {
+  Future<void> endTask() async {
     _task = _task.copyWith(ended: true);
     incrementTaskIdCounter();
-    addTaskToHistory();
+    await addTaskToHistory();
     saveChange();
   }
 

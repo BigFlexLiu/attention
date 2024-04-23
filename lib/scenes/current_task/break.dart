@@ -10,6 +10,7 @@ class Break extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final reward = Provider.of<TaskProvider>(context).task.reward;
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
@@ -34,7 +35,7 @@ class Break extends StatelessWidget {
                         text: "It's time for ",
                         style: Theme.of(context).textTheme.headlineSmall),
                     TextSpan(
-                      text: Provider.of<TaskProvider>(context).task.reward,
+                      text: reward == "" ? "a break" : reward,
                       style: Theme.of(context)
                           .textTheme
                           .headlineSmall!

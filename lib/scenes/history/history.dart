@@ -1,5 +1,5 @@
-import 'package:attention/io/tasks_io.dart';
 import 'package:attention/models/task.dart';
+import 'package:attention/provider/all_tasks_provider.dart';
 import 'package:attention/provider/task_filter_provider.dart';
 import 'package:attention/scenes/create_task/next_task.dart';
 import 'package:attention/scenes/history/details.dart';
@@ -19,9 +19,6 @@ class History extends StatefulWidget {
 }
 
 class _HistoryState extends State<History> {
-  late Future<List<Task>> previousTasks;
-  int i = 0;
-
   final filterDisplay = {
     TaskStatusFilter.completed:
         FilterDetails(Icons.check_circle, "Show Completed"),
@@ -34,98 +31,119 @@ class _HistoryState extends State<History> {
   @override
   void initState() {
     super.initState();
-    previousTasks = readPastTasks();
   }
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder<List<Task>>(
-      future: previousTasks,
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        } else if (snapshot.hasError) {
-          return Center(child: Text("Error: ${snapshot.error}"));
-        } else {
-          final taskFilterProvider = Provider.of<TaskFilterProvider>(context);
-          final filter = taskFilterProvider.filter;
-          List<Task> tasks = filter.filterTasks(snapshot.data!);
-          return Scaffold(
-              key: _scaffoldKey,
-              appBar: AppBar(
-                backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-                title: const Text("History"),
-                actions: [
-                  IconButton(
-                    icon: const Icon(Icons.calendar_month),
-                    onPressed: () {
-                      Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) =>
-                              HistoryCalendar(snapshot.data!)));
-                    },
-                  ),
-                  IconButton(
-                      tooltip: filterDisplay[filter.taskStatusFilter]!.title,
-                      onPressed: () {
-                        final newTaskStutus = TaskStatusFilter.values[
-                            (filter.taskStatusFilter.index + 1) %
-                                TaskStatusFilter.values.length];
-                        taskFilterProvider.setTaskStatusFilter(newTaskStutus);
-                      },
-                      icon: Icon(filterDisplay[filter.taskStatusFilter]!.icon)),
-                ],
-              ),
-              body: ListView(
-                  children: tasks.reversed.map((task) {
-                return GestureDetector(
-                    onLongPress: () {
-                      if (!task.completed) {
-                        showDialog(
-                            context: context,
-                            builder: (context) => AlertDialog(
-                                  content: Column(
-                                      mainAxisSize: MainAxisSize.min,
-                                      children: [
-                                        TextButton(
-                                            onPressed: () {
-                                              final durationInSeconds =
-                                                  task.duration!.inSeconds;
-                                              PlatformService.startService(
-                                                  durationInSeconds);
-                                              Provider.of<TaskProvider>(context,
-                                                  listen: false)
-                                                ..setTask(task)
-                                                ..restartTask(task);
-                                              Navigator.of(context).pop();
-                                              pop();
-                                            },
-                                            child: const Text(
-                                                "Set as current task and start")),
-                                        TextButton(
-                                            onPressed: () {
-                                              Provider.of<TaskProvider>(context,
-                                                  listen: false)
-                                                ..setTask(task)
-                                                ..setTaskParentTask(task);
+    final taskFilterProvider = Provider.of<TaskFilterProvider>(context);
+    final filter = taskFilterProvider.filter;
 
-                                              Navigator.of(context).pop();
-                                              Navigator.of(context)
-                                                  .pushReplacement(
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              const NextTask()));
-                                            },
-                                            child: const Text(
-                                                "Set as current task and edit")),
-                                      ]),
-                                ));
-                      }
-                    },
-                    child: LayeredTaskCard(task));
-              }).toList()));
-        }
-      },
-    );
+    List<Task> tasks =
+        filter.filterTasks(Provider.of<AllTasksProvider>(context).tasks);
+
+    return Scaffold(
+        key: _scaffoldKey,
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          title: const Text("History"),
+          actions: [
+            IconButton(
+                tooltip: "Delete all tasks shown",
+                onPressed: () {
+                  showDialog(
+                      context: context,
+                      builder: (context) => AlertDialog(
+                            title: const Text("Delete all tasks shown?"),
+                            actions: [
+                              TextButton(
+                                  onPressed: () {
+                                    Provider.of<AllTasksProvider>(context,
+                                            listen: false)
+                                        .removeTasks(tasks);
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text("Delete")),
+                              TextButton(
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                  child: const Text("Cancel")),
+                            ],
+                          ));
+                },
+                icon: const Icon(Icons.delete)),
+            IconButton(
+              icon: const Icon(Icons.calendar_month),
+              onPressed: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => const HistoryCalendar()));
+              },
+            ),
+            IconButton(
+                tooltip: filterDisplay[filter.taskStatusFilter]!.title,
+                onPressed: () {
+                  final newTaskStutus = TaskStatusFilter.values[
+                      (filter.taskStatusFilter.index + 1) %
+                          TaskStatusFilter.values.length];
+                  taskFilterProvider.setTaskStatusFilter(newTaskStutus);
+                },
+                icon: Icon(filterDisplay[filter.taskStatusFilter]!.icon)),
+          ],
+        ),
+        body: ListView(
+            children: tasks.reversed.map((task) {
+          return GestureDetector(
+              onLongPress: () {
+                showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                          content:
+                              Column(mainAxisSize: MainAxisSize.min, children: [
+                            if (!task.completed)
+                              TextButton(
+                                  onPressed: () {
+                                    final durationInSeconds =
+                                        task.duration!.inSeconds;
+                                    PlatformService.startService(
+                                        durationInSeconds);
+                                    Provider.of<TaskProvider>(context,
+                                        listen: false)
+                                      ..setTask(task)
+                                      ..restartTask(task);
+                                    Navigator.of(context).pop();
+                                    pop();
+                                  },
+                                  child: const Text(
+                                      "Set as current task and start")),
+                            if (!task.completed)
+                              TextButton(
+                                  onPressed: () {
+                                    Provider.of<TaskProvider>(context,
+                                        listen: false)
+                                      ..setTask(task)
+                                      ..setTaskParentTask(task);
+
+                                    Navigator.of(context).pop();
+                                    Navigator.of(context).pushReplacement(
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const NextTask()));
+                                  },
+                                  child: const Text(
+                                      "Set as current task and edit")),
+                            TextButton(
+                                onPressed: () {
+                                  Provider.of<AllTasksProvider>(context,
+                                          listen: false)
+                                      .removeTasks([task]);
+                                  Navigator.of(context).pop();
+                                },
+                                child: const Text("Delete")),
+                          ]),
+                        ));
+              },
+              child: LayeredTaskCard(task));
+        }).toList()));
   }
 
   void pop() {

@@ -1,3 +1,4 @@
+import 'package:attention/provider/all_tasks_provider.dart';
 import 'package:attention/provider/hangedNotesProvider.dart';
 import 'package:attention/provider/settings_provider.dart';
 import 'package:attention/provider/task_filter_provider.dart';
@@ -25,12 +26,15 @@ void main() async {
   await taskProvider.init();
   final settingsProvider = SettingsProvider();
   await settingsProvider.init();
+  final AllTasksProvider allTasksProvider = AllTasksProvider();
+  await allTasksProvider.init();
   runApp(
     MultiProvider(providers: [
       ChangeNotifierProvider(create: (context) => taskProvider),
       ChangeNotifierProvider(create: (context) => hangedNotesProvider),
       ChangeNotifierProvider(create: (context) => TaskFilterProvider()),
       ChangeNotifierProvider(create: (context) => settingsProvider),
+      ChangeNotifierProvider(create: (context) => allTasksProvider),
     ], child: const MyApp()),
   );
 }

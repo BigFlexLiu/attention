@@ -32,14 +32,6 @@ class _SettingsMenuState extends State<SettingsMenu> {
             title: const Text("Appearance"),
             onTap: () {},
           ),
-          ListTile(
-            title: const Text("Delete Data"),
-            onTap: () {},
-          ),
-          ListTile(
-            title: const Text("Reset"),
-            onTap: () {},
-          ),
         ],
       ),
     );
