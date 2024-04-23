@@ -66,7 +66,7 @@ class TodoNoteViewState extends State<TodoNoteView>
                           builder: (context) =>
                               HangNoteTimeSelection(widget.note)));
                 },
-                icon: const Icon(Icons.photo_library),
+                icon: const Icon(Icons.calendar_month),
                 tooltip: "Hang it"),
           ],
         ),
@@ -127,8 +127,8 @@ class _TodoNoteTreeState extends State<TodoNoteTree> {
                 color: todoNoteTreeColorMapper[
                     node.level.clamp(0, todoNoteTreeColorMapper.length - 1)],
                 child: ListTile(
-                  title: TextButton(
-                      onPressed: () {
+                  title: InkWell(
+                      onTap: () {
                         setState(() {
                           node.meta!["isDone"] =
                               !(node.meta!["isDone"] ?? false);

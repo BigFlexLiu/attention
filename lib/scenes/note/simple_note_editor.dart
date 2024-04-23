@@ -67,7 +67,20 @@ class _SimpleNoteEditorState extends State<SimpleNoteEditor>
             onTap: () => showDialog(
                 context: context,
                 builder: (context) => AlertDialog(
-                      title: const Text("Change note title"),
+                      title: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text("Change note title"),
+                          IconButton(
+                            onPressed: () {
+                              setState(() {
+                                _titleEdittingController.text = "";
+                              });
+                            },
+                            icon: const Icon(Icons.delete),
+                          ),
+                        ],
+                      ),
                       content: TextField(
                         controller: _titleEdittingController,
                         decoration:
@@ -77,13 +90,9 @@ class _SimpleNoteEditorState extends State<SimpleNoteEditor>
                         }),
                       ),
                     )),
-            child: Row(
-              children: [
-                Text(_titleEdittingController.text.isEmpty
-                    ? "Untitled"
-                    : _titleEdittingController.text),
-              ],
-            ),
+            child: Text(_titleEdittingController.text.isEmpty
+                ? "Untitled"
+                : _titleEdittingController.text),
           ),
         ),
         body: TextField(

@@ -1,6 +1,6 @@
 import 'dart:math';
 
-import 'package:attention/scenes/break/break.dart';
+import 'package:attention/scenes/current_task/break.dart';
 import 'package:attention/scenes/current_task/ongoing_task.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

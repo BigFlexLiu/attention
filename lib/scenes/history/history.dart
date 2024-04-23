@@ -161,33 +161,36 @@ class _LayeredTaskCardState extends State<LayeredTaskCard> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      TaskCard(
-          widget.task,
-          IconButton(
+    final trailing = children.isEmpty
+        ? const SizedBox()
+        : IconButton(
             onPressed: () {
               setState(() {
                 childrenVisible = !childrenVisible;
               });
             },
-            icon:
-                Icon(childrenVisible ? Icons.visibility_off : Icons.visibility),
+            icon: Icon(childrenVisible ? Icons.expand_more : Icons.expand_less),
             tooltip: childrenVisible
                 ? "Show previous sessions"
                 : "Hide previous sessions",
-          )),
+          );
+    return Column(children: [
+      TaskCard(widget.task, trailing),
       Visibility(
         visible: childrenVisible,
-        child: Column(
-          children: children
-              .map((task) => TaskCard(
-                    task,
-                    const SizedBox(
-                      width: 0,
-                      height: 0,
-                    ),
-                  ))
-              .toList(),
+        child: Padding(
+          padding: const EdgeInsets.only(left: 16.0),
+          child: Column(
+            children: children
+                .map((task) => TaskCard(
+                      task,
+                      const SizedBox(
+                        width: 0,
+                        height: 0,
+                      ),
+                    ))
+                .toList(),
+          ),
         ),
       ),
     ]);

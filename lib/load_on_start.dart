@@ -12,6 +12,7 @@ Future<void> checkFirstLaunchAndUpdate() async {
   // await deletePastTasks();
   // await deleteAllNoteFiles();
   // await loadDefaultData();
+  // await deleteSettings();
   if (isFirstLaunch) {
     await loadDefaultData();
     await prefs.setBool('isFirstLaunch', false);

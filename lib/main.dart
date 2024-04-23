@@ -1,10 +1,12 @@
 import 'package:attention/provider/hangedNotesProvider.dart';
+import 'package:attention/provider/settings_provider.dart';
 import 'package:attention/provider/task_filter_provider.dart';
 import 'package:attention/provider/task_provider.dart';
 import 'package:attention/scenes/create_task/next_task.dart';
 import 'package:attention/scenes/current_task/ongoing_task.dart';
 import 'package:attention/scenes/history/history.dart';
 import 'package:attention/scenes/note/notes_menu.dart';
+import 'package:attention/scenes/settings/settings_menu.dart';
 import 'package:attention/theme/circle_painter.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -21,11 +23,14 @@ void main() async {
   final hangedNotesProvider = HangedNotesProvider()..pullHangedNotes();
   final taskProvider = TaskProvider();
   await taskProvider.init();
+  final settingsProvider = SettingsProvider();
+  await settingsProvider.init();
   runApp(
     MultiProvider(providers: [
       ChangeNotifierProvider(create: (context) => taskProvider),
       ChangeNotifierProvider(create: (context) => hangedNotesProvider),
-      ChangeNotifierProvider(create: (context) => TaskFilterProvider())
+      ChangeNotifierProvider(create: (context) => TaskFilterProvider()),
+      ChangeNotifierProvider(create: (context) => settingsProvider),
     ], child: const MyApp()),
   );
 }
@@ -79,6 +84,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     final task = Provider.of<TaskProvider>(context);
+    final hangedNotes = Provider.of<HangedNotesProvider>(context);
 
     Widget taskWidget = OptionButton("Create Task", () {
       task.newTask();
@@ -112,36 +118,46 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
                 Expanded(
+                  flex: hangedNotes.hangedNotes.isNotEmpty ? 1 : 5,
                   child: Container(),
                 ),
-                const Expanded(flex: 10, child: HangNotesGallery()),
+                if (hangedNotes.hangedNotes.isNotEmpty)
+                  const Expanded(flex: 10, child: HangNotesGallery()),
                 Expanded(
                   flex: 4,
-                  child: Container(
-                    padding: const EdgeInsets.all(20),
-                    decoration: const BoxDecoration(
-                        shape: BoxShape.circle, color: Colors.white),
-                    child: Column(
-                      children: [
-                        taskWidget,
-                        OptionButton("History", () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const History(),
-                            ),
-                          );
-                        }),
-                        OptionButton("Notes", () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(
-                              builder: (context) => const NotesMenu(),
-                            ),
-                          );
-                        })
-                      ],
-                    ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      taskWidget,
+                      OptionButton("History", () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const History(),
+                          ),
+                        );
+                      }),
+                      OptionButton("Notes", () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const NotesMenu(),
+                          ),
+                        );
+                      }),
+                      OptionButton("Settings", () {
+                        Navigator.of(context).push(
+                          MaterialPageRoute(
+                            builder: (context) => const SettingsMenu(),
+                          ),
+                        );
+                      })
+                    ],
                   ),
-                )
+                ),
+                if (hangedNotes.hangedNotes.isEmpty)
+                  Expanded(
+                    flex: 2,
+                    child: Container(),
+                  ),
               ]),
         ));
   }

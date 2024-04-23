@@ -31,7 +31,7 @@ class HangNotesGallery extends StatelessWidget {
         }).toList(),
         options: CarouselOptions(
           height: double.infinity,
-          enableInfiniteScroll: false,
+          enlargeCenterPage: true,
         ));
   }
 }
@@ -54,17 +54,24 @@ class _NoteDisplayState extends State<NoteDisplay> {
     return ListView(
       children: [
         Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            InkWell(
-              onTap: () {
-                Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => widget.getEditor()));
-              },
-              child: Text(widget.title,
-                  style: Theme.of(context).textTheme.headlineMedium),
-            ),
             Expanded(
-              child: Container(),
+              child: InkWell(
+                onTap: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => widget.getEditor()));
+                },
+                onLongPress: () => showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                          title: Text(widget.title),
+                        )),
+                child: Text(widget.title == "" ? "Untitled" : widget.title,
+                    overflow: TextOverflow.clip,
+                    softWrap: false,
+                    style: Theme.of(context).textTheme.headlineMedium),
+              ),
             ),
             IconButton(
                 onPressed: () {

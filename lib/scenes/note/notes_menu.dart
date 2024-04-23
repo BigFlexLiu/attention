@@ -118,6 +118,7 @@ class SimpleNoteDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(simpleNote.title.length);
     showLongPressDialogue() => showDialog(
         context: context,
         builder: (context) {
@@ -136,19 +137,19 @@ class SimpleNoteDisplay extends StatelessWidget {
               ),
               TextButton(
                 onPressed: () {
-                  deleteSimpleNoteById(simpleNote.id)
-                      .then((value) => loadNotes());
-                  Navigator.of(context).pop();
-                },
-                child: const Text("Delete"),
-              ),
-              TextButton(
-                onPressed: () {
                   Navigator.of(context).pop();
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => HangNoteTimeSelection(simpleNote)));
                 },
                 child: const Text("Hang"),
+              ),
+              TextButton(
+                onPressed: () {
+                  deleteSimpleNoteById(simpleNote.id)
+                      .then((value) => loadNotes());
+                  Navigator.of(context).pop();
+                },
+                child: const Text("Delete"),
               ),
             ],
           ));
@@ -156,7 +157,7 @@ class SimpleNoteDisplay extends StatelessWidget {
     return InkWell(
       onLongPress: showLongPressDialogue,
       child: ExpansionTile(
-          title: Text(simpleNote.title),
+          title: Text(simpleNote.title != "" ? simpleNote.title : "untitled"),
           subtitle: Text(fullDateDisplay(simpleNote.createdAt)),
           children: [
             ListTile(
@@ -194,14 +195,6 @@ class TodoNoteDisplay extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () {
-                    deleteTodoNoteById(todoNote.id!)
-                        .then((value) => updateNotes());
-                    Navigator.of(context).pop();
-                  },
-                  child: const Text("Delete"),
-                ),
-                TextButton(
-                  onPressed: () {
                     Navigator.of(context).pop();
                     Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) =>
@@ -219,67 +212,46 @@ class TodoNoteDisplay extends StatelessWidget {
                   },
                   child: const Text("Hang"),
                 ),
+                TextButton(
+                  onPressed: () {
+                    deleteTodoNoteById(todoNote.id!)
+                        .then((value) => updateNotes());
+                    Navigator.of(context).pop();
+                  },
+                  child: const Text("Delete"),
+                ),
               ],
             ));
           }),
-      child: ExpansionTile(title: Text(todoNote.title), children: [
-        TreeView.simple(
-          shrinkWrap: true,
-          tree: node,
-          showRootNode: false,
-          expansionIndicatorBuilder: (context, node) =>
-              ChevronIndicator.rightDown(
-            tree: node,
-            color: Colors.blue[700],
-            padding: const EdgeInsets.all(8),
-          ),
-          indentation: const Indentation(style: IndentStyle.squareJoint),
-          onItemTap: (item) {},
-          builder: (context, node) => InkWell(
-            onLongPress: () => showDialog(
-                context: context,
-                builder: (context) {
-                  return AlertDialog(
-                      content: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      TextButton(
-                        onPressed: () {
-                          deleteTodoNoteById(todoNote.id!);
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text("Delete"),
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          node.add(TreeNode(
-                              key: node.key + node.children.length.toString()));
-                          Navigator.of(context).pop();
-                        },
-                        child: const Text("Add Child"),
-                      ),
-                    ],
-                  ));
-                }),
-            child: Card(
-              color: todoNoteTreeColorMapper[
-                  node.level.clamp(0, todoNoteTreeColorMapper.length - 1)],
-              child: ListTile(
-                title: TextButton(
-                    onPressed: () {
-                      // Do something
-                    },
-                    child: Text(node.data ?? "",
-                        style: TextStyle(
-                          decoration: treeNodeIsDone(node)
-                              ? TextDecoration.lineThrough
-                              : TextDecoration.none,
-                        ))),
+      child: ExpansionTile(
+          title: Text(todoNote.title == "" ? todoNote.title : "untitled"),
+          children: [
+            TreeView.simple(
+              shrinkWrap: true,
+              tree: node,
+              showRootNode: false,
+              expansionIndicatorBuilder: (context, node) =>
+                  ChevronIndicator.rightDown(
+                tree: node,
+                color: Colors.blue[700],
+                padding: const EdgeInsets.all(8),
+              ),
+              indentation: const Indentation(style: IndentStyle.squareJoint),
+              onItemTap: (item) {},
+              builder: (context, node) => Card(
+                color: todoNoteTreeColorMapper[
+                    node.level.clamp(0, todoNoteTreeColorMapper.length - 1)],
+                child: ListTile(
+                  title: Text(node.data ?? "",
+                      style: TextStyle(
+                        decoration: treeNodeIsDone(node)
+                            ? TextDecoration.lineThrough
+                            : TextDecoration.none,
+                      )),
+                ),
               ),
             ),
-          ),
-        ),
-      ]),
+          ]),
     );
   }
 }

@@ -91,7 +91,7 @@ TreeNode treeNodeFromTodoNote(TodoNote todoNote) {
 }
 
 bool treeNodeIsDone(TreeNode node) {
-  return node.meta!["isDone"] ||
+  return (node.meta != null && node.meta!["isDone"]) ||
       (node.parent != null && treeNodeIsDone(node.parent as TreeNode));
 }
 

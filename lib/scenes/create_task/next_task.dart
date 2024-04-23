@@ -1,3 +1,4 @@
+import 'package:attention/provider/settings_provider.dart';
 import 'package:attention/scenes/create_task/problem_solution.dart';
 import 'package:attention/scenes/create_task/task_breakdown.dart';
 import 'package:attention/scenes/create_task/time_setter.dart';
@@ -33,13 +34,14 @@ class _NextTaskState extends State<NextTask> {
 
   @override
   Widget build(BuildContext context) {
+    final taskDefinition =
+        Provider.of<SettingsProvider>(context).settings.taskDefinition;
     return Scaffold(
       body: OnboardingPagePresenter(pages: [
         TaskQuestionModel(
           title: 'Define',
           description: 'What do you want to achieve?',
           hint: null,
-          imageUrl: 'https://i.ibb.co/cJqsPSB/scooter.png',
           inputWidget: TextField(
             controller: TextEditingController()..text = initialTitle,
             decoration:
@@ -56,62 +58,63 @@ class _NextTaskState extends State<NextTask> {
           description: 'How long would you like to work this session?',
           hint:
               "Keep in mind of how long you can focus for. 25 minutes is a good start.",
-          imageUrl: 'https://i.ibb.co/LvmZypG/storefront-illustration-2.png',
           inputWidget: const TimeSetter(),
           bgColor: taskComponentColors["time"]!,
         ),
-        TaskQuestionModel(
-          title: 'Steps',
-          description: 'How do you break this task down into simpler steps?',
-          hint: "Break it down into smaller tasks to make it more manageable.",
-          imageUrl: 'https://i.ibb.co/420D7VP/building.png',
-          inputWidget: const TaskBreakdown(),
-          bgColor: taskComponentColors["steps"]!,
-        ),
-        TaskQuestionModel(
-          title: 'Reflect',
-          description: 'Why is it important for you to complete this task?',
-          hint:
-              "A strong reason is a good motivator, especially a personal one.",
-          imageUrl: 'https://i.ibb.co/cJqsPSB/scooter.png',
-          inputWidget: TextField(
-            controller: TextEditingController()
-              ..text = initialPersonalImportance,
-            decoration:
-                const InputDecoration(hintText: "Be specific and clear"),
-            maxLines: null,
-            onChanged: (value) {
-              Provider.of<TaskProvider>(context, listen: false)
-                  .setTaskPersonalImportance(value);
-            },
+        if (taskDefinition.defineSteps)
+          TaskQuestionModel(
+            title: 'Steps',
+            description: 'How do you break this task down into simpler steps?',
+            hint:
+                "Break it down into smaller tasks to make it more manageable.",
+            inputWidget: const TaskBreakdown(),
+            bgColor: taskComponentColors["steps"]!,
           ),
-          bgColor: taskComponentColors["personalImportance"]!,
-        ),
-        TaskQuestionModel(
-          title: 'Prevent',
-          description: 'What problem might disrupt you?',
-          hint:
-              "What problem have you encountered before doing a similar task?",
-          imageUrl: 'https://i.ibb.co/cJqsPSB/scooter.png',
-          inputWidget: const ProblemSolutions(),
-          bgColor: taskComponentColors["problemSolutions"]!,
-        ),
-        TaskQuestionModel(
-          title: 'Promise',
-          description: 'What should be the reward for completing this task?',
-          hint: "What do you enjoy doing? It could also be a small treat.",
-          imageUrl: 'https://i.ibb.co/cJqsPSB/scooter.png',
-          inputWidget: TextField(
-            controller: TextEditingController()..text = initialReward,
-            decoration: const InputDecoration(hintText: "Be kind to yourself"),
-            maxLines: null,
-            onChanged: (value) {
-              Provider.of<TaskProvider>(context, listen: false)
-                  .setTaskReward(value);
-            },
+        if (taskDefinition.defineReflect)
+          TaskQuestionModel(
+            title: 'Reflect',
+            description: 'Why is it important for you to complete this task?',
+            hint:
+                "A strong reason is a good motivator, especially a personal one.",
+            inputWidget: TextField(
+              controller: TextEditingController()
+                ..text = initialPersonalImportance,
+              decoration:
+                  const InputDecoration(hintText: "Be specific and clear"),
+              maxLines: null,
+              onChanged: (value) {
+                Provider.of<TaskProvider>(context, listen: false)
+                    .setTaskPersonalImportance(value);
+              },
+            ),
+            bgColor: taskComponentColors["personalImportance"]!,
           ),
-          bgColor: taskComponentColors["promise"]!,
-        ),
+        if (taskDefinition.defineProblems)
+          TaskQuestionModel(
+            title: 'Prevent',
+            description: 'What problem might disrupt you?',
+            hint:
+                "What problem have you encountered before doing a similar task?",
+            inputWidget: const ProblemSolutions(),
+            bgColor: taskComponentColors["problemSolutions"]!,
+          ),
+        if (taskDefinition.definePromise)
+          TaskQuestionModel(
+            title: 'Promise',
+            description: 'What should be the reward for completing this task?',
+            hint: "What do you enjoy doing? It could also be a small treat.",
+            inputWidget: TextField(
+              controller: TextEditingController()..text = initialReward,
+              decoration:
+                  const InputDecoration(hintText: "Be kind to yourself"),
+              maxLines: null,
+              onChanged: (value) {
+                Provider.of<TaskProvider>(context, listen: false)
+                    .setTaskReward(value);
+              },
+            ),
+            bgColor: taskComponentColors["promise"]!,
+          ),
       ]),
     );
   }
@@ -377,7 +380,6 @@ class TaskQuestionModel {
   final String title;
   final String description;
   final String? hint;
-  final String imageUrl;
   final Widget inputWidget;
   final Color bgColor;
   final Color textColor;
@@ -386,7 +388,6 @@ class TaskQuestionModel {
       {required this.title,
       required this.description,
       required this.hint,
-      required this.imageUrl,
       required this.inputWidget,
       this.bgColor = Colors.blue,
       this.textColor = Colors.white});

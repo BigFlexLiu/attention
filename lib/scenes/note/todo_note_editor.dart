@@ -148,8 +148,8 @@ class TodoNoteEditorState extends State<TodoNoteEditor>
             color: todoNoteTreeColorMapper[
                 node.level.clamp(0, todoNoteTreeColorMapper.length - 1)],
             child: ListTile(
-              title: TextButton(
-                  onPressed: () {
+              title: InkWell(
+                  onTap: () {
                     _textEdittingController.text = node.data ?? "";
 
                     showDialog(
