@@ -12,7 +12,6 @@ import 'package:attention/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/todo_note.dart';
-import '../../theme/circle_painter.dart';
 import '../../util/util.dart';
 import 'make_note.dart';
 

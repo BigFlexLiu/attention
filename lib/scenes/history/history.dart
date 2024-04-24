@@ -1,7 +1,7 @@
 import 'package:attention/models/task.dart';
 import 'package:attention/provider/all_tasks_provider.dart';
 import 'package:attention/provider/task_filter_provider.dart';
-import 'package:attention/scenes/create_task/next_task.dart';
+import 'package:attention/scenes/create_task/create_task.dart';
 import 'package:attention/scenes/history/details.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -75,8 +75,8 @@ class _HistoryState extends State<History> {
             IconButton(
               icon: const Icon(Icons.calendar_month),
               onPressed: () {
-                Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => const HistoryCalendar()));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => const HistoryCalendar()));
               },
             ),
             IconButton(
@@ -127,7 +127,7 @@ class _HistoryState extends State<History> {
                                     Navigator.of(context).pushReplacement(
                                         MaterialPageRoute(
                                             builder: (context) =>
-                                                const NextTask()));
+                                                const CreateTask()));
                                   },
                                   child: const Text(
                                       "Set as current task and edit")),

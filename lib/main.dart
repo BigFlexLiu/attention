@@ -3,7 +3,7 @@ import 'package:attention/provider/hangedNotesProvider.dart';
 import 'package:attention/provider/settings_provider.dart';
 import 'package:attention/provider/task_filter_provider.dart';
 import 'package:attention/provider/task_provider.dart';
-import 'package:attention/scenes/create_task/next_task.dart';
+import 'package:attention/scenes/create_task/create_task.dart';
 import 'package:attention/scenes/current_task/ongoing_task.dart';
 import 'package:attention/scenes/history/history.dart';
 import 'package:attention/scenes/note/notes_menu.dart';
@@ -94,7 +94,7 @@ class _MyHomePageState extends State<MyHomePage> {
       task.newTask();
       Navigator.of(context).push(
         MaterialPageRoute(
-          builder: (context) => const NextTask(),
+          builder: (context) => const CreateTask(),
         ),
       );
     });

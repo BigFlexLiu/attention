@@ -1,5 +1,6 @@
 import 'package:attention/models/settings.dart';
 import 'package:attention/provider/settings_provider.dart';
+import 'package:attention/scenes/create_task/create_task.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -17,25 +18,40 @@ class _ModifyTaskDefinitionState extends State<ModifyTaskDefinition> {
     SettingsProvider settingsProvider =
         Provider.of<SettingsProvider>(context, listen: false);
     final List<Definition> definitions = [
-      Definition("Define Steps", settings.taskDefinition.defineSteps,
+      Definition("Steps", settings.taskDefinition.defineSteps,
           settingsProvider.toggleDefineSteps),
-      Definition("Define Problems", settings.taskDefinition.defineProblems,
+      Definition("Problems", settings.taskDefinition.defineProblems,
           settingsProvider.toggleDefineProblems),
-      Definition("Define Reflect", settings.taskDefinition.defineReflect,
+      Definition("Reflect", settings.taskDefinition.defineReflect,
           settingsProvider.toggleDefineReflect),
-      Definition("Define Promise", settings.taskDefinition.definePromise,
+      Definition("Promise", settings.taskDefinition.definePromise,
           settingsProvider.toggleDefinePromise),
     ];
+
+    final bottomSheet = Container(
+      color: Theme.of(context).colorScheme.inversePrimary,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          ...definitions
+              .map((e) => Expanded(
+                    child: DefinitionToggleWidget(
+                        e.title, e.isToggled, e.onToggle),
+                  ))
+              .toList()
+        ],
+      ),
+    );
 
     return Scaffold(
         appBar: AppBar(
           title: const Text("Modify Task Definition"),
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         ),
-        body: ListView(
-          children: definitions
-              .map((e) =>
-                  DefinitionToggleWidget(e.title, e.isToggled, e.onToggle))
-              .toList(),
+        bottomSheet: bottomSheet,
+        body: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [const Expanded(child: CreateTask(isDemo: true)), bottomSheet],
         ));
   }
 }
@@ -61,26 +77,16 @@ class DefinitionToggleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 32.0),
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      decoration: BoxDecoration(
-          color: isToggled ? Colors.green : Colors.red,
-          borderRadius: BorderRadius.circular(8.0)),
-      child: Row(
-        children: [
-          Text(
+    return Row(
+      children: [
+        TextButton(
+          onPressed: onToggle,
+          child: Text(
             title,
-            style: Theme.of(context).textTheme.headlineSmall,
+            style: TextStyle(color: isToggled ? Colors.green : Colors.red),
           ),
-          const Spacer(),
-          IconButton(
-              onPressed: () {
-                onToggle();
-              },
-              icon: Icon(isToggled ? Icons.check : Icons.close)),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

@@ -11,14 +11,15 @@ import '../../theme/circle_painter.dart';
 import '../../theme/theme.dart';
 import '../../util/services.dart';
 
-class NextTask extends StatefulWidget {
-  const NextTask({Key? key}) : super(key: key);
+class CreateTask extends StatefulWidget {
+  const CreateTask({this.isDemo = false, Key? key}) : super(key: key);
+  final bool isDemo;
 
   @override
-  State<NextTask> createState() => _NextTaskState();
+  State<CreateTask> createState() => _CreateTaskState();
 }
 
-class _NextTaskState extends State<NextTask> {
+class _CreateTaskState extends State<CreateTask> {
   late String initialTitle;
   late String initialPersonalImportance;
   late String initialReward;
@@ -37,7 +38,7 @@ class _NextTaskState extends State<NextTask> {
     final taskDefinition =
         Provider.of<SettingsProvider>(context).settings.taskDefinition;
     return Scaffold(
-      body: OnboardingPagePresenter(pages: [
+      body: OnboardingPagePresenter(isDemo: widget.isDemo, pages: [
         TaskQuestionModel(
           title: 'Define',
           description: 'What do you want to achieve?',
@@ -122,11 +123,10 @@ class _NextTaskState extends State<NextTask> {
 
 class OnboardingPagePresenter extends StatefulWidget {
   final List<TaskQuestionModel> pages;
-  final VoidCallback? onSkip;
-  final VoidCallback? onFinish;
+  final bool isDemo;
 
   const OnboardingPagePresenter(
-      {Key? key, required this.pages, this.onSkip, this.onFinish})
+      {this.isDemo = false, Key? key, required this.pages})
       : super(key: key);
 
   @override
@@ -146,6 +146,7 @@ class _OnboardingPageState extends State<OnboardingPagePresenter> {
     final task = Provider.of<TaskProvider>(context).task;
     // Returns whether the page change was successful
     bool shouldPageChange() {
+      if (widget.isDemo) return true;
       if (_currentPage == 0 && task.title.isEmpty) {
         _showSnackBar(context, "Please enter a title");
         return false;
@@ -155,6 +156,10 @@ class _OnboardingPageState extends State<OnboardingPagePresenter> {
         return false;
       }
       return true;
+    }
+
+    if (_currentPage >= widget.pages.length) {
+      _currentPage = widget.pages.length - 1;
     }
 
     return Scaffold(
@@ -178,86 +183,92 @@ class _OnboardingPageState extends State<OnboardingPagePresenter> {
                         });
                       } else {
                         _pageController.animateToPage(_currentPage,
-                            duration: Duration(milliseconds: 300),
+                            duration: const Duration(milliseconds: 300),
                             curve: Curves.easeInOut);
                       }
                     },
                     itemBuilder: (context, idx) {
                       final item = widget.pages[idx];
-                      return Column(
-                        children: [
-                          Expanded(
-                              child: Column(children: [
-                            Padding(
-                              padding: const EdgeInsets.all(32.0),
-                              child: Column(
-                                children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Text(item.title,
+                      return IgnorePointer(
+                        ignoring: widget.isDemo,
+                        child: Column(
+                          children: [
+                            Expanded(
+                                child: Column(children: [
+                              Padding(
+                                padding: const EdgeInsets.all(32.0),
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(item.title,
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .titleLarge
+                                                ?.copyWith(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: item.textColor,
+                                                )),
+                                        if (item.hint != null)
+                                          IconButton(
+                                              onPressed: () {
+                                                showDialog(
+                                                    context: context,
+                                                    builder:
+                                                        (BuildContext context) {
+                                                      return AlertDialog(
+                                                        title:
+                                                            const Text("Hint"),
+                                                        content:
+                                                            Text(item.hint!),
+                                                        actions: <Widget>[
+                                                          TextButton(
+                                                            onPressed: () {
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pop();
+                                                            },
+                                                            child: const Text(
+                                                                'Close'),
+                                                          ),
+                                                        ],
+                                                      );
+                                                    });
+                                              },
+                                              icon: Icon(Icons.help,
+                                                  color: invertColor(
+                                                      item.textColor)))
+                                      ],
+                                    ),
+                                    Container(
+                                      constraints:
+                                          const BoxConstraints(maxWidth: 280),
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 24.0, vertical: 8.0),
+                                      child: Text(item.description,
+                                          textAlign: TextAlign.center,
                                           style: Theme.of(context)
                                               .textTheme
-                                              .titleLarge
+                                              .bodyMedium
                                               ?.copyWith(
-                                                fontWeight: FontWeight.bold,
                                                 color: item.textColor,
                                               )),
-                                      if (item.hint != null)
-                                        IconButton(
-                                            onPressed: () {
-                                              showDialog(
-                                                  context: context,
-                                                  builder:
-                                                      (BuildContext context) {
-                                                    return AlertDialog(
-                                                      title: const Text("Hint"),
-                                                      content: Text(item.hint!),
-                                                      actions: <Widget>[
-                                                        TextButton(
-                                                          onPressed: () {
-                                                            Navigator.of(
-                                                                    context)
-                                                                .pop();
-                                                          },
-                                                          child: const Text(
-                                                              'Close'),
-                                                        ),
-                                                      ],
-                                                    );
-                                                  });
-                                            },
-                                            icon: Icon(Icons.help,
-                                                color: invertColor(
-                                                    item.textColor)))
-                                    ],
-                                  ),
-                                  Container(
-                                    constraints:
-                                        const BoxConstraints(maxWidth: 280),
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 24.0, vertical: 8.0),
-                                    child: Text(item.description,
-                                        textAlign: TextAlign.center,
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodyMedium
-                                            ?.copyWith(
-                                              color: item.textColor,
-                                            )),
-                                  ),
-                                ],
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                            Expanded(
-                              child: Padding(
-                                padding:
-                                    const EdgeInsets.symmetric(horizontal: 32),
-                                child: item.inputWidget,
-                              ),
-                            )
-                          ])),
-                        ],
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 32),
+                                  child: item.inputWidget,
+                                ),
+                              )
+                            ])),
+                          ],
+                        ),
                       );
                     },
                   ),
@@ -282,82 +293,87 @@ class _OnboardingPageState extends State<OnboardingPagePresenter> {
                 ),
 
                 // Bottom buttons
-                SizedBox(
-                  height: 100,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      TextButton(
-                        style: TextButton.styleFrom(
-                            visualDensity: VisualDensity.comfortable,
-                            foregroundColor: Colors.white,
-                            textStyle: const TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold)),
-                        onPressed: () {
-                          if (_currentPage == 0) {
-                            Navigator.pop(context);
-                          } else {
-                            _pageController.animateToPage(_currentPage - 1,
-                                curve: Curves.easeInOutCubic,
-                                duration: const Duration(milliseconds: 250));
-                          }
-                        },
-                        child: Row(
-                          children: [
-                            Icon(_currentPage == 0
-                                ? Icons.home
-                                : Icons.arrow_back),
-                            const SizedBox(width: 8),
-                            const Text("Back"),
-                          ],
-                        ),
-                      ),
-                      TextButton(
-                        style: TextButton.styleFrom(
-                            visualDensity: VisualDensity.comfortable,
-                            foregroundColor: Colors.white,
-                            textStyle: const TextStyle(
-                                fontSize: 16, fontWeight: FontWeight.bold)),
-                        onPressed: () async {
-                          if (_currentPage == widget.pages.length - 1) {
-                            Provider.of<TaskProvider>(context, listen: false)
-                                .setTaskStartTime(DateTime.now());
-
-                            final durationInSeconds = Provider.of<TaskProvider>(
-                                    context,
-                                    listen: false)
-                                .task
-                                .duration!
-                                .inSeconds;
-                            PlatformService.startService(durationInSeconds);
-
-                            Navigator.pushReplacement(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => const OnGoingTask()));
-                          } else {
-                            if (shouldPageChange()) {
-                              _pageController.animateToPage(_currentPage + 1,
+                IgnorePointer(
+                  ignoring: widget.isDemo,
+                  child: SizedBox(
+                    height: 100,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextButton(
+                          style: TextButton.styleFrom(
+                              visualDensity: VisualDensity.comfortable,
+                              foregroundColor: Colors.white,
+                              textStyle: const TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold)),
+                          onPressed: () {
+                            if (_currentPage == 0) {
+                              Navigator.pop(context);
+                            } else {
+                              _pageController.animateToPage(_currentPage - 1,
                                   curve: Curves.easeInOutCubic,
                                   duration: const Duration(milliseconds: 250));
                             }
-                          }
-                        },
-                        child: Row(
-                          children: [
-                            Text(
-                              _currentPage == widget.pages.length - 1
-                                  ? "Start"
-                                  : "Next",
-                            ),
-                            const SizedBox(width: 8),
-                            Icon(_currentPage == widget.pages.length - 1
-                                ? Icons.done
-                                : Icons.arrow_forward),
-                          ],
+                          },
+                          child: Row(
+                            children: [
+                              Icon(_currentPage == 0
+                                  ? Icons.home
+                                  : Icons.arrow_back),
+                              const SizedBox(width: 8),
+                              const Text("Back"),
+                            ],
+                          ),
                         ),
-                      ),
-                    ],
+                        TextButton(
+                          style: TextButton.styleFrom(
+                              visualDensity: VisualDensity.comfortable,
+                              foregroundColor: Colors.white,
+                              textStyle: const TextStyle(
+                                  fontSize: 16, fontWeight: FontWeight.bold)),
+                          onPressed: () async {
+                            if (_currentPage == widget.pages.length - 1) {
+                              Provider.of<TaskProvider>(context, listen: false)
+                                  .setTaskStartTime(DateTime.now());
+
+                              final durationInSeconds =
+                                  Provider.of<TaskProvider>(context,
+                                          listen: false)
+                                      .task
+                                      .duration!
+                                      .inSeconds;
+                              PlatformService.startService(durationInSeconds);
+
+                              Navigator.pushReplacement(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const OnGoingTask()));
+                            } else {
+                              if (shouldPageChange()) {
+                                _pageController.animateToPage(_currentPage + 1,
+                                    curve: Curves.easeInOutCubic,
+                                    duration:
+                                        const Duration(milliseconds: 250));
+                              }
+                            }
+                          },
+                          child: Row(
+                            children: [
+                              Text(
+                                _currentPage == widget.pages.length - 1
+                                    ? "Start"
+                                    : "Next",
+                              ),
+                              const SizedBox(width: 8),
+                              Icon(_currentPage == widget.pages.length - 1
+                                  ? Icons.done
+                                  : Icons.arrow_forward),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 )
               ],
