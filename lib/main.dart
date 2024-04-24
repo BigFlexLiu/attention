@@ -115,6 +115,19 @@ class _MyHomePageState extends State<MyHomePage> {
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: Text(widget.title),
+          actions: [
+            IconButton(
+              icon: const Icon(Icons.settings),
+              tooltip: "Settings",
+              onPressed: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => const SettingsMenu(),
+                  ),
+                );
+              },
+            ),
+          ],
         ),
         body: CustomPaint(
           painter: CirclePainter(),
@@ -127,41 +140,30 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 if (hangedNotes.hangedNotes.isNotEmpty)
                   const Expanded(flex: 10, child: HangNotesGallery()),
-                Expanded(
-                  flex: 4,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      taskWidget,
-                      OptionButton("History", () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const History(),
-                          ),
-                        );
-                      }),
-                      OptionButton("Notes", () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const NotesMenu(),
-                          ),
-                        );
-                      }),
-                      OptionButton("Settings", () {
-                        Navigator.of(context).push(
-                          MaterialPageRoute(
-                            builder: (context) => const SettingsMenu(),
-                          ),
-                        );
-                      })
-                    ],
-                  ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    taskWidget,
+                    OptionButton("History", () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const History(),
+                        ),
+                      );
+                    }),
+                    OptionButton("Notes", () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => const NotesMenu(),
+                        ),
+                      );
+                    }),
+                  ],
                 ),
-                if (hangedNotes.hangedNotes.isEmpty)
-                  Expanded(
-                    flex: 2,
-                    child: Container(),
-                  ),
+                Expanded(
+                  flex: hangedNotes.hangedNotes.isEmpty ? 2 : 1,
+                  child: Container(),
+                ),
               ]),
         ));
   }

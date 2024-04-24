@@ -12,6 +12,7 @@ import 'package:attention/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/todo_note.dart';
+import '../../theme/circle_painter.dart';
 import '../../util/util.dart';
 import 'make_note.dart';
 
@@ -95,6 +96,7 @@ class _NotesMenuState extends State<NotesMenu> {
                 ),
                 IconButton(
                   icon: Icon(filterIcon[filter]!.icon),
+                  tooltip: filterIcon[filter]!.hintText,
                   onPressed: () {
                     setState(() {
                       filter = nextFilter(filter);
@@ -118,7 +120,6 @@ class SimpleNoteDisplay extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(simpleNote.title.length);
     showLongPressDialogue() => showDialog(
         context: context,
         builder: (context) {
@@ -225,6 +226,7 @@ class TodoNoteDisplay extends StatelessWidget {
           }),
       child: ExpansionTile(
           title: Text(todoNote.title == "" ? todoNote.title : "untitled"),
+          subtitle: Text(fullDateDisplay(todoNote.createdAt!)),
           children: [
             TreeView.simple(
               shrinkWrap: true,

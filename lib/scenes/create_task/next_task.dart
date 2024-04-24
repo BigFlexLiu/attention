@@ -139,8 +139,24 @@ class _OnboardingPageState extends State<OnboardingPagePresenter> {
   // Define a controller for the pageview
   final PageController _pageController = PageController(initialPage: 0);
 
+  SnackBar? _currentSnackBar;
+
   @override
   Widget build(BuildContext context) {
+    final task = Provider.of<TaskProvider>(context).task;
+    // Returns whether the page change was successful
+    bool shouldPageChange() {
+      if (_currentPage == 0 && task.title.isEmpty) {
+        _showSnackBar(context, "Please enter a title");
+        return false;
+      }
+      if (_currentPage == 1 && task.duration == Duration.zero) {
+        _showSnackBar(context, "A task should not be 0s long");
+        return false;
+      }
+      return true;
+    }
+
     return Scaffold(
       body: AnimatedContainer(
         duration: const Duration(milliseconds: 250),
@@ -156,10 +172,15 @@ class _OnboardingPageState extends State<OnboardingPagePresenter> {
                     controller: _pageController,
                     itemCount: widget.pages.length,
                     onPageChanged: (idx) {
-                      // Change current page when pageview changes
-                      setState(() {
-                        _currentPage = idx;
-                      });
+                      if (shouldPageChange()) {
+                        setState(() {
+                          _currentPage = idx;
+                        });
+                      } else {
+                        _pageController.animateToPage(_currentPage,
+                            duration: Duration(milliseconds: 300),
+                            curve: Curves.easeInOut);
+                      }
                     },
                     itemBuilder: (context, idx) {
                       final item = widget.pages[idx];
@@ -315,28 +336,11 @@ class _OnboardingPageState extends State<OnboardingPagePresenter> {
                                 MaterialPageRoute(
                                     builder: (context) => const OnGoingTask()));
                           } else {
-                            if (_currentPage == 0 &&
-                                Provider.of<TaskProvider>(context,
-                                        listen: false)
-                                    .task
-                                    .title
-                                    .isEmpty) {
-                              _showSnackBar(context, "Please enter a title");
-                              return;
+                            if (shouldPageChange()) {
+                              _pageController.animateToPage(_currentPage + 1,
+                                  curve: Curves.easeInOutCubic,
+                                  duration: const Duration(milliseconds: 250));
                             }
-                            if (_currentPage == 1 &&
-                                Provider.of<TaskProvider>(context,
-                                            listen: false)
-                                        .task
-                                        .duration ==
-                                    Duration.zero) {
-                              _showSnackBar(
-                                  context, "A task should not be 0s long");
-                              return;
-                            }
-                            _pageController.animateToPage(_currentPage + 1,
-                                curve: Curves.easeInOutCubic,
-                                duration: const Duration(milliseconds: 250));
                           }
                         },
                         child: Row(
@@ -365,14 +369,18 @@ class _OnboardingPageState extends State<OnboardingPagePresenter> {
   }
 
   void _showSnackBar(BuildContext context, String text) {
-    final snackBar = SnackBar(
+    if (_currentSnackBar != null) {
+      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+    }
+    _currentSnackBar = SnackBar(
       content: Text(text),
       action: SnackBarAction(
         label: 'Ok',
         onPressed: () {},
       ),
+      duration: const Duration(seconds: 1),
     );
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    ScaffoldMessenger.of(context).showSnackBar(_currentSnackBar!);
   }
 }
 
