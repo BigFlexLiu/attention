@@ -10,6 +10,7 @@ import '../../provider/task_provider.dart';
 import '../../theme/circle_painter.dart';
 import '../../theme/theme.dart';
 import '../../util/services.dart';
+import '../../util/sound.dart';
 
 class CreateTask extends StatefulWidget {
   const CreateTask({this.isDemo = false, Key? key}) : super(key: key);
@@ -348,6 +349,7 @@ class _OnboardingPageState extends State<OnboardingPagePresenter> {
                                       .duration!
                                       .inSeconds;
                               PlatformService.startService(durationInSeconds);
+                              playPianoDescent();
 
                               Navigator.pushReplacement(
                                   context,

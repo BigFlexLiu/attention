@@ -3,6 +3,7 @@ import 'package:attention/provider/all_tasks_provider.dart';
 import 'package:attention/provider/task_filter_provider.dart';
 import 'package:attention/scenes/create_task/create_task.dart';
 import 'package:attention/scenes/history/details.dart';
+import 'package:attention/util/sound.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -110,6 +111,7 @@ class _HistoryState extends State<History> {
                                         listen: false)
                                       ..setTask(task)
                                       ..restartTask(task);
+                                    playPianoDescent();
                                     Navigator.of(context).pop();
                                     pop();
                                   },
