@@ -5,6 +5,7 @@ import 'package:attention/models/task_definition.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../models/settings.dart';
+import '../theme/theme.dart';
 
 Future<File> get _settingsFile async {
   final directory = await getApplicationDocumentsDirectory();
@@ -19,17 +20,19 @@ Future<File> writeSettings(Settings settings) async {
 }
 
 Future<Settings> readSettings() async {
-  try {
-    final file = await _settingsFile;
-
-    if (!await file.exists()) {
-      return const Settings(
-          taskDefinition: TaskDefinition(
+  const defaultSetting = Settings(
+      taskDefinition: TaskDefinition(
         defineSteps: true,
         defineProblems: true,
         defineReflect: true,
         definePromise: true,
-      ));
+      ),
+      painterTheme: PainterTheme.circle);
+  try {
+    final file = await _settingsFile;
+
+    if (!await file.exists()) {
+      return defaultSetting;
     }
 
     final String contents = await file.readAsString();
@@ -37,18 +40,11 @@ Future<Settings> readSettings() async {
 
     return settings;
   } catch (e) {
-    return const Settings(
-        taskDefinition: TaskDefinition(
-      defineSteps: true,
-      defineProblems: true,
-      defineReflect: true,
-      definePromise: true,
-    ));
+    return defaultSetting;
   }
 }
 
 Future<void> writeTaskDefinition(TaskDefinition taskDefintion) async {
-  final file = await _settingsFile;
   final settings = await readSettings();
   final newSettings = settings.copyWith(taskDefinition: taskDefintion);
   await writeSettings(newSettings);

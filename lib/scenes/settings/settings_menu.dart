@@ -1,3 +1,4 @@
+import 'package:attention/scenes/settings/appearance.dart';
 import 'package:flutter/material.dart';
 
 import 'modify_task_definition.dart';
@@ -30,7 +31,11 @@ class _SettingsMenuState extends State<SettingsMenu> {
           ),
           ListTile(
             title: const Text("Appearance"),
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const Appearance(),
+              ));
+            },
           ),
         ],
       ),

@@ -168,7 +168,12 @@ class _OnboardingPageState extends State<OnboardingPagePresenter> {
         color: widget.pages[_currentPage].bgColor,
         child: SafeArea(
           child: CustomPaint(
-            painter: CirclePainter(),
+            painter: CirclePainter(
+              backgroundColor:
+                  widget.pages[_currentPage].bgColor.withOpacity(0.8),
+              painterTheme:
+                  Provider.of<SettingsProvider>(context).settings.painterTheme,
+            ),
             child: Column(
               children: [
                 Expanded(

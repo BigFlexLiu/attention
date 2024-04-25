@@ -1,4 +1,5 @@
 import 'package:attention/io/settings_io.dart';
+import 'package:attention/theme/theme.dart';
 import 'package:flutter/material.dart';
 
 import '../models/settings.dart';
@@ -8,6 +9,11 @@ class SettingsProvider extends ChangeNotifier {
 
   Future<void> init() async {
     settings = await readSettings();
+  }
+
+  void setPainterTheme(PainterTheme theme) {
+    settings = settings.copyWith(painterTheme: theme);
+    saveChange();
   }
 
   void toggleDefineSteps() {

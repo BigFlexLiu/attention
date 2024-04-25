@@ -130,7 +130,9 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ),
         body: CustomPaint(
-          painter: CirclePainter(),
+          painter: CirclePainter(
+              painterTheme:
+                  Provider.of<SettingsProvider>(context).settings.painterTheme),
           child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[

@@ -21,6 +21,7 @@ Settings _$SettingsFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$Settings {
   TaskDefinition get taskDefinition => throw _privateConstructorUsedError;
+  PainterTheme get painterTheme => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -33,7 +34,7 @@ abstract class $SettingsCopyWith<$Res> {
   factory $SettingsCopyWith(Settings value, $Res Function(Settings) then) =
       _$SettingsCopyWithImpl<$Res, Settings>;
   @useResult
-  $Res call({TaskDefinition taskDefinition});
+  $Res call({TaskDefinition taskDefinition, PainterTheme painterTheme});
 
   $TaskDefinitionCopyWith<$Res> get taskDefinition;
 }
@@ -52,12 +53,17 @@ class _$SettingsCopyWithImpl<$Res, $Val extends Settings>
   @override
   $Res call({
     Object? taskDefinition = null,
+    Object? painterTheme = null,
   }) {
     return _then(_value.copyWith(
       taskDefinition: null == taskDefinition
           ? _value.taskDefinition
           : taskDefinition // ignore: cast_nullable_to_non_nullable
               as TaskDefinition,
+      painterTheme: null == painterTheme
+          ? _value.painterTheme
+          : painterTheme // ignore: cast_nullable_to_non_nullable
+              as PainterTheme,
     ) as $Val);
   }
 
@@ -78,7 +84,7 @@ abstract class _$$SettingsImplCopyWith<$Res>
       __$$SettingsImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({TaskDefinition taskDefinition});
+  $Res call({TaskDefinition taskDefinition, PainterTheme painterTheme});
 
   @override
   $TaskDefinitionCopyWith<$Res> get taskDefinition;
@@ -96,12 +102,17 @@ class __$$SettingsImplCopyWithImpl<$Res>
   @override
   $Res call({
     Object? taskDefinition = null,
+    Object? painterTheme = null,
   }) {
     return _then(_$SettingsImpl(
       taskDefinition: null == taskDefinition
           ? _value.taskDefinition
           : taskDefinition // ignore: cast_nullable_to_non_nullable
               as TaskDefinition,
+      painterTheme: null == painterTheme
+          ? _value.painterTheme
+          : painterTheme // ignore: cast_nullable_to_non_nullable
+              as PainterTheme,
     ));
   }
 }
@@ -109,17 +120,20 @@ class __$$SettingsImplCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$SettingsImpl implements _Settings {
-  const _$SettingsImpl({required this.taskDefinition});
+  const _$SettingsImpl(
+      {required this.taskDefinition, required this.painterTheme});
 
   factory _$SettingsImpl.fromJson(Map<String, dynamic> json) =>
       _$$SettingsImplFromJson(json);
 
   @override
   final TaskDefinition taskDefinition;
+  @override
+  final PainterTheme painterTheme;
 
   @override
   String toString() {
-    return 'Settings(taskDefinition: $taskDefinition)';
+    return 'Settings(taskDefinition: $taskDefinition, painterTheme: $painterTheme)';
   }
 
   @override
@@ -128,12 +142,14 @@ class _$SettingsImpl implements _Settings {
         (other.runtimeType == runtimeType &&
             other is _$SettingsImpl &&
             (identical(other.taskDefinition, taskDefinition) ||
-                other.taskDefinition == taskDefinition));
+                other.taskDefinition == taskDefinition) &&
+            (identical(other.painterTheme, painterTheme) ||
+                other.painterTheme == painterTheme));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, taskDefinition);
+  int get hashCode => Object.hash(runtimeType, taskDefinition, painterTheme);
 
   @JsonKey(ignore: true)
   @override
@@ -150,14 +166,17 @@ class _$SettingsImpl implements _Settings {
 }
 
 abstract class _Settings implements Settings {
-  const factory _Settings({required final TaskDefinition taskDefinition}) =
-      _$SettingsImpl;
+  const factory _Settings(
+      {required final TaskDefinition taskDefinition,
+      required final PainterTheme painterTheme}) = _$SettingsImpl;
 
   factory _Settings.fromJson(Map<String, dynamic> json) =
       _$SettingsImpl.fromJson;
 
   @override
   TaskDefinition get taskDefinition;
+  @override
+  PainterTheme get painterTheme;
   @override
   @JsonKey(ignore: true)
   _$$SettingsImplCopyWith<_$SettingsImpl> get copyWith =>

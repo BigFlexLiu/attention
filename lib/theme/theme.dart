@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 final taskComponentColors = {
@@ -16,3 +15,12 @@ final todoNoteTreeColorMapper = [
   Colors.cyan[100],
   Colors.green[100],
 ];
+
+enum PainterTheme { none, circle, ripple, bubble }
+
+final painterThemeName = {
+  PainterTheme.none: "None",
+  PainterTheme.circle: "Circle",
+  PainterTheme.ripple: "Ripple",
+  PainterTheme.bubble: "Bubble",
+};
