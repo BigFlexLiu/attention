@@ -30,7 +30,9 @@ class HangNotesGallery extends StatelessWidget {
           return Container();
         }).toList(),
         options: CarouselOptions(
+          disableCenter: true,
           enlargeCenterPage: true,
+          enableInfiniteScroll: false,
         ));
   }
 }

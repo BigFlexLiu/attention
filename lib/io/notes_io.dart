@@ -57,7 +57,7 @@ Future<void> incrementNoteIdCounter() async {
 }
 
 // Simple notes
-Future<void> addSimpleNote(String title, String content) async {
+Future<SimpleNote> addSimpleNote(String title, String content) async {
   final file = await _localPath;
   List<SimpleNote> notes = await readSimpleNotes();
   notes.add(SimpleNote(
@@ -68,7 +68,8 @@ Future<void> addSimpleNote(String title, String content) async {
       autoDeleteAt: null));
   await incrementNoteIdCounter();
 
-  File('$file/$simple_note_file').writeAsString(jsonEncode(notes));
+  await File('$file/$simple_note_file').writeAsString(jsonEncode(notes));
+  return notes.last;
 }
 
 Future<List<SimpleNote>> readSimpleNotes() async {
@@ -190,6 +191,10 @@ Future<List<HangedNoteInfo>> readHangedNotesInfo() async {
     return [];
   }
   final noteString = file.readAsStringSync();
+
+  if (noteString == "") {
+    return [];
+  }
   final List noteJson = jsonDecode(noteString);
 
   List<HangedNoteInfo> noteInfos = noteJson

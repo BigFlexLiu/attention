@@ -1,3 +1,4 @@
+import 'package:attention/login.dart';
 import 'package:attention/provider/all_tasks_provider.dart';
 import 'package:attention/provider/hangedNotesProvider.dart';
 import 'package:attention/provider/settings_provider.dart';
@@ -20,6 +21,7 @@ void main() async {
       .ensureInitialized(); // Ensure plugin services are initialized
 
   // Initialize the app
+  await login();
   await checkFirstLaunchAndUpdate(); // Check and update launch status
   final hangedNotesProvider = HangedNotesProvider()..pullHangedNotes();
   final taskProvider = TaskProvider();
@@ -140,7 +142,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   flex: hangedNotes.hangedNotes.isNotEmpty ? 1 : 5,
                   child: Container(),
                 ),
-                if (hangedNotes.hangedNotes.isNotEmpty)
+                if (hangedNotes.hangedNotesInfo.isNotEmpty)
                   const Expanded(flex: 10, child: HangNotesGallery()),
                 Column(
                   mainAxisAlignment: MainAxisAlignment.center,

@@ -9,12 +9,12 @@ DateTime dayOf(DateTime date) {
   return DateTime.utc(date.year, date.month, date.day);
 }
 
-bool hasDayPassed(DateTime time) {
-  DateTime now = DateTime.now();
-
-  return now.year != time.year ||
-      now.month != time.month ||
-      now.day != time.day;
+// Check if the day has passed
+// -1 if the day has passed between time to other
+// 0 if the time and other are on the same day
+// 1 if the time is one or more day before other
+int hasDayPassed(DateTime time, DateTime other) {
+  return dayOf(time).compareTo(dayOf(other));
 }
 
 bool hasMonthPassed(DateTime time) {
