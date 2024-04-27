@@ -75,6 +75,7 @@ class _HistoryState extends State<History> {
                 icon: const Icon(Icons.delete)),
             IconButton(
               icon: const Icon(Icons.calendar_month),
+              tooltip: "Select a or a range of dates",
               onPressed: () {
                 Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => const HistoryCalendar()));

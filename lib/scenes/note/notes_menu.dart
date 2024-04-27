@@ -112,10 +112,23 @@ class _NotesMenuState extends State<NotesMenu> {
   }
 }
 
-class SimpleNoteDisplay extends StatelessWidget {
+class SimpleNoteDisplay extends StatefulWidget {
   const SimpleNoteDisplay(this.loadNotes, this.simpleNote, {super.key});
   final VoidCallback loadNotes;
   final SimpleNote simpleNote;
+
+  @override
+  State<SimpleNoteDisplay> createState() => _SimpleNoteDisplayState();
+}
+
+class _SimpleNoteDisplayState extends State<SimpleNoteDisplay> {
+  late BuildContext _scaffoldContext;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _scaffoldContext = context;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -130,8 +143,8 @@ class SimpleNoteDisplay extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).pop();
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) =>
-                          SimpleNoteEditor(loadNotes, note: simpleNote)));
+                      builder: (context) => SimpleNoteEditor(widget.loadNotes,
+                          note: widget.simpleNote)));
                 },
                 child: const Text("View"),
               ),
@@ -139,14 +152,22 @@ class SimpleNoteDisplay extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).pop();
                   Navigator.of(context).push(MaterialPageRoute(
-                      builder: (context) => HangNoteTimeSelection(simpleNote)));
+                      builder: (context) =>
+                          HangNoteTimeSelection(widget.simpleNote)));
                 },
                 child: const Text("Hang"),
               ),
               TextButton(
+                onPressed: () async {
+                  Navigator.pop(context);
+                  showDateTimePickers(context, widget.simpleNote);
+                },
+                child: const Text("Schedule Delete"),
+              ),
+              TextButton(
                 onPressed: () {
-                  deleteSimpleNoteById(simpleNote.id)
-                      .then((value) => loadNotes());
+                  deleteSimpleNoteById(widget.simpleNote.id)
+                      .then((value) => widget.loadNotes());
                   Navigator.of(context).pop();
                 },
                 child: const Text("Delete"),
@@ -157,14 +178,43 @@ class SimpleNoteDisplay extends StatelessWidget {
     return InkWell(
       onLongPress: showLongPressDialogue,
       child: ExpansionTile(
-          title: Text(simpleNote.title != "" ? simpleNote.title : "untitled"),
-          subtitle: Text(fullDateDisplay(simpleNote.createdAt)),
+          title: Text(widget.simpleNote.title != ""
+              ? widget.simpleNote.title
+              : "untitled"),
+          subtitle: Text(fullDateDisplay(widget.simpleNote.createdAt)),
           children: [
             ListTile(
-                title: Text(simpleNote.content),
+                title: Text(widget.simpleNote.content),
                 onLongPress: showLongPressDialogue)
           ]),
     );
+  }
+
+  Future<void> showDateTimePickers(
+      BuildContext context, SimpleNote note) async {
+    final DateTime? pickedDate = await showDatePicker(
+      context: context,
+      initialDate: DateTime.now(),
+      firstDate: DateTime(2015),
+      lastDate: DateTime(2101),
+    );
+
+    if (pickedDate != null) {
+      final TimeOfDay? pickedTime = await showTimePicker(
+        context: _scaffoldContext,
+        initialTime: TimeOfDay.now(),
+      );
+
+      if (pickedTime != null) {
+        editSimpleNoteById(
+          note.id,
+          note.title,
+          note.content,
+          DateTime(pickedDate.year, pickedDate.month, pickedDate.day,
+              pickedTime.hour, pickedTime.minute),
+        ).then((value) => widget.loadNotes());
+      }
+    }
   }
 }
 

@@ -24,6 +24,7 @@ mixin _$SimpleNote {
   String get title => throw _privateConstructorUsedError;
   String get content => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
+  DateTime? get autoDeleteAt => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
   @JsonKey(ignore: true)
@@ -37,7 +38,12 @@ abstract class $SimpleNoteCopyWith<$Res> {
           SimpleNote value, $Res Function(SimpleNote) then) =
       _$SimpleNoteCopyWithImpl<$Res, SimpleNote>;
   @useResult
-  $Res call({int id, String title, String content, DateTime createdAt});
+  $Res call(
+      {int id,
+      String title,
+      String content,
+      DateTime createdAt,
+      DateTime? autoDeleteAt});
 }
 
 /// @nodoc
@@ -57,6 +63,7 @@ class _$SimpleNoteCopyWithImpl<$Res, $Val extends SimpleNote>
     Object? title = null,
     Object? content = null,
     Object? createdAt = null,
+    Object? autoDeleteAt = freezed,
   }) {
     return _then(_value.copyWith(
       id: null == id
@@ -75,6 +82,10 @@ class _$SimpleNoteCopyWithImpl<$Res, $Val extends SimpleNote>
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      autoDeleteAt: freezed == autoDeleteAt
+          ? _value.autoDeleteAt
+          : autoDeleteAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ) as $Val);
   }
 }
@@ -87,7 +98,12 @@ abstract class _$$SimpleNoteImplCopyWith<$Res>
       __$$SimpleNoteImplCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({int id, String title, String content, DateTime createdAt});
+  $Res call(
+      {int id,
+      String title,
+      String content,
+      DateTime createdAt,
+      DateTime? autoDeleteAt});
 }
 
 /// @nodoc
@@ -105,6 +121,7 @@ class __$$SimpleNoteImplCopyWithImpl<$Res>
     Object? title = null,
     Object? content = null,
     Object? createdAt = null,
+    Object? autoDeleteAt = freezed,
   }) {
     return _then(_$SimpleNoteImpl(
       id: null == id
@@ -123,6 +140,10 @@ class __$$SimpleNoteImplCopyWithImpl<$Res>
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime,
+      autoDeleteAt: freezed == autoDeleteAt
+          ? _value.autoDeleteAt
+          : autoDeleteAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
     ));
   }
 }
@@ -134,7 +155,8 @@ class _$SimpleNoteImpl with DiagnosticableTreeMixin implements _SimpleNote {
       {required this.id,
       required this.title,
       required this.content,
-      required this.createdAt});
+      required this.createdAt,
+      required this.autoDeleteAt});
 
   factory _$SimpleNoteImpl.fromJson(Map<String, dynamic> json) =>
       _$$SimpleNoteImplFromJson(json);
@@ -147,10 +169,12 @@ class _$SimpleNoteImpl with DiagnosticableTreeMixin implements _SimpleNote {
   final String content;
   @override
   final DateTime createdAt;
+  @override
+  final DateTime? autoDeleteAt;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'SimpleNote(id: $id, title: $title, content: $content, createdAt: $createdAt)';
+    return 'SimpleNote(id: $id, title: $title, content: $content, createdAt: $createdAt, autoDeleteAt: $autoDeleteAt)';
   }
 
   @override
@@ -161,7 +185,8 @@ class _$SimpleNoteImpl with DiagnosticableTreeMixin implements _SimpleNote {
       ..add(DiagnosticsProperty('id', id))
       ..add(DiagnosticsProperty('title', title))
       ..add(DiagnosticsProperty('content', content))
-      ..add(DiagnosticsProperty('createdAt', createdAt));
+      ..add(DiagnosticsProperty('createdAt', createdAt))
+      ..add(DiagnosticsProperty('autoDeleteAt', autoDeleteAt));
   }
 
   @override
@@ -173,12 +198,15 @@ class _$SimpleNoteImpl with DiagnosticableTreeMixin implements _SimpleNote {
             (identical(other.title, title) || other.title == title) &&
             (identical(other.content, content) || other.content == content) &&
             (identical(other.createdAt, createdAt) ||
-                other.createdAt == createdAt));
+                other.createdAt == createdAt) &&
+            (identical(other.autoDeleteAt, autoDeleteAt) ||
+                other.autoDeleteAt == autoDeleteAt));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, title, content, createdAt);
+  int get hashCode =>
+      Object.hash(runtimeType, id, title, content, createdAt, autoDeleteAt);
 
   @JsonKey(ignore: true)
   @override
@@ -199,7 +227,8 @@ abstract class _SimpleNote implements SimpleNote {
       {required final int id,
       required final String title,
       required final String content,
-      required final DateTime createdAt}) = _$SimpleNoteImpl;
+      required final DateTime createdAt,
+      required final DateTime? autoDeleteAt}) = _$SimpleNoteImpl;
 
   factory _SimpleNote.fromJson(Map<String, dynamic> json) =
       _$SimpleNoteImpl.fromJson;
@@ -212,6 +241,8 @@ abstract class _SimpleNote implements SimpleNote {
   String get content;
   @override
   DateTime get createdAt;
+  @override
+  DateTime? get autoDeleteAt;
   @override
   @JsonKey(ignore: true)
   _$$SimpleNoteImplCopyWith<_$SimpleNoteImpl> get copyWith =>

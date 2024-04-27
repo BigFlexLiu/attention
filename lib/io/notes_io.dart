@@ -64,7 +64,8 @@ Future<void> addSimpleNote(String title, String content) async {
       id: await readNoteIdCounter(),
       title: title,
       content: content,
-      createdAt: DateTime.now()));
+      createdAt: DateTime.now(),
+      autoDeleteAt: null));
   await incrementNoteIdCounter();
 
   File('$file/$simple_note_file').writeAsString(jsonEncode(notes));
@@ -81,10 +82,17 @@ Future<List<SimpleNote>> readSimpleNotes() async {
   final noteString = file.readAsStringSync();
   final List<dynamic> noteJson = jsonDecode(noteString);
 
-  return noteJson.map((json) => SimpleNote.fromJson(json)).toList();
+  List<SimpleNote> notes =
+      noteJson.map((json) => SimpleNote.fromJson(json)).toList();
+
+  notes.removeWhere((element) =>
+      element.autoDeleteAt != null &&
+      element.autoDeleteAt!.isBefore(DateTime.now()));
+  return notes;
 }
 
-Future<void> editSimpleNoteById(int id, String title, String content) async {
+Future<void> editSimpleNoteById(
+    int id, String title, String content, DateTime? autoDeleteAt) async {
   final file = await _localPath;
   final notes = await readSimpleNotes();
   final int targetNoteIdx = notes.indexWhere((element) => element.id == id);
@@ -93,6 +101,7 @@ Future<void> editSimpleNoteById(int id, String title, String content) async {
     title: title,
     content: content,
     createdAt: notes[targetNoteIdx].createdAt,
+    autoDeleteAt: autoDeleteAt,
   );
 
   File('$file/$simple_note_file').writeAsString(jsonEncode(notes));
@@ -203,8 +212,14 @@ Future<List> readHangedNotes() async {
   Map notes = Map.fromIterable(combinedNotes,
       key: (element) => convertToInt(element.id!));
 
-  final List hangedNotes =
-      (await hangedNotesInfo).map((e) => notes[e.id]).toList();
+  // Get note with checks for hanged notes being deleted
+  List hangedNotes = (await hangedNotesInfo).toList().map((e) {
+    if (notes.containsKey(e.id)) {
+      return notes[e.id];
+    }
+    hangedNotesInfo.then((value) => deleteHangedNoteInfoById(e.id));
+  }).toList();
+  hangedNotes.removeWhere((element) => element == null);
 
   return hangedNotes;
 }

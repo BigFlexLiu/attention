@@ -12,6 +12,7 @@ abstract class TodoNote with _$TodoNote {
     required String title,
     required List<TodoNote> children,
     required DateTime? createdAt,
+    required DateTime? autoDeleteAt,
     required bool isDone,
   }) = _TodoNote;
 
@@ -19,7 +20,7 @@ abstract class TodoNote with _$TodoNote {
       _$TodoNoteFromJson(json);
 
   factory TodoNote.fromTreeNode(TreeNode treeNode,
-      {DateTime? createdAt, String? id}) {
+      {DateTime? createdAt, String? id, DateTime? autoDeleteAt}) {
     return TodoNote(
       id: id ?? treeNode.key,
       title: treeNode.data ?? "",
@@ -30,6 +31,7 @@ abstract class TodoNote with _$TodoNote {
           ? treeNode.meta!["isDone"]
           : false,
       createdAt: createdAt,
+      autoDeleteAt: autoDeleteAt,
     );
   }
 }

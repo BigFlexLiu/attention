@@ -12,6 +12,9 @@ _$SimpleNoteImpl _$$SimpleNoteImplFromJson(Map<String, dynamic> json) =>
       title: json['title'] as String,
       content: json['content'] as String,
       createdAt: DateTime.parse(json['createdAt'] as String),
+      autoDeleteAt: json['autoDeleteAt'] == null
+          ? null
+          : DateTime.parse(json['autoDeleteAt'] as String),
     );
 
 Map<String, dynamic> _$$SimpleNoteImplToJson(_$SimpleNoteImpl instance) =>
@@ -20,4 +23,5 @@ Map<String, dynamic> _$$SimpleNoteImplToJson(_$SimpleNoteImpl instance) =>
       'title': instance.title,
       'content': instance.content,
       'createdAt': instance.createdAt.toIso8601String(),
+      'autoDeleteAt': instance.autoDeleteAt?.toIso8601String(),
     };

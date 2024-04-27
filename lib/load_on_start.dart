@@ -30,7 +30,8 @@ Future<void> loadDefaultData() async {
       TreeNode(key: "3", data: "Tap task name at the top to edit it"),
     ]);
 
-  await addSimpleNote("Check out the notes", "They help you think");
+  await addSimpleNote("Check out the notes",
+      "They help you think. You can hang more notes to help you remember.");
   await addTodoNote(sampleTodoNote);
 
   final simpleNote = await readSimpleNotes();

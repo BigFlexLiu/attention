@@ -130,8 +130,8 @@ class _HistoryCalendarState extends State<HistoryCalendar> {
                 final taskFilterProvider =
                     Provider.of<TaskFilterProvider>(context, listen: false);
                 if (isSingleSelect) {
-                  taskFilterProvider.setTimeBoundFilter(_selectedDay!,
-                      _selectedDay?.add(const Duration(days: 1)));
+                  taskFilterProvider.setTimeBoundFilter(
+                      _selectedDay, _selectedDay?.add(const Duration(days: 1)));
                 } else if (_rangeStart != null && _rangeEnd != null) {
                   taskFilterProvider.setTimeBoundFilter(
                       _rangeStart!, _rangeEnd!.add(const Duration(days: 1)));
@@ -156,8 +156,13 @@ class _HistoryCalendarState extends State<HistoryCalendar> {
             },
             onDaySelected: (selectedDay, focusedDay) {
               setState(() {
-                _selectedDay = selectedDay;
-                _selectedTasks = _getTasksForDay(selectedDay);
+                if (_selectedDay == selectedDay) {
+                  _selectedDay = null;
+                  _selectedTasks = tasks;
+                } else {
+                  _selectedDay = selectedDay;
+                  _selectedTasks = _getTasksForDay(selectedDay);
+                }
               });
             },
             onRangeSelected: (start, end, focusedDay) {

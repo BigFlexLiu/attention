@@ -11,6 +11,7 @@ abstract class SimpleNote with _$SimpleNote {
     required String title,
     required String content,
     required DateTime createdAt,
+    required DateTime? autoDeleteAt,
   }) = _SimpleNote;
 
   factory SimpleNote.fromJson(Map<String, dynamic> json) =>

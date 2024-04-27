@@ -37,7 +37,7 @@ class _SimpleNoteEditorState extends State<SimpleNoteEditor>
           _titleEdittingController.text, _noteEdittingController.text);
     } else {
       await editSimpleNoteById(widget.note!.id, _titleEdittingController.text,
-          _noteEdittingController.text);
+          _noteEdittingController.text, widget.note?.autoDeleteAt);
     }
     widget.onNoteSaved();
   }
@@ -63,6 +63,16 @@ class _SimpleNoteEditorState extends State<SimpleNoteEditor>
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
+          actions: [
+            IconButton(
+              onPressed: () {
+                updateNote();
+                Navigator.of(context).pop();
+              },
+              tooltip: "Delete automatically after some time",
+              icon: const Icon(Icons.timer),
+            ),
+          ],
           title: InkWell(
             onTap: () => showDialog(
                 context: context,

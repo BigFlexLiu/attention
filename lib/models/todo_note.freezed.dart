@@ -24,6 +24,7 @@ mixin _$TodoNote {
   String get title => throw _privateConstructorUsedError;
   List<TodoNote> get children => throw _privateConstructorUsedError;
   DateTime? get createdAt => throw _privateConstructorUsedError;
+  DateTime? get autoDeleteAt => throw _privateConstructorUsedError;
   bool get isDone => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -42,6 +43,7 @@ abstract class $TodoNoteCopyWith<$Res> {
       String title,
       List<TodoNote> children,
       DateTime? createdAt,
+      DateTime? autoDeleteAt,
       bool isDone});
 }
 
@@ -62,6 +64,7 @@ class _$TodoNoteCopyWithImpl<$Res, $Val extends TodoNote>
     Object? title = null,
     Object? children = null,
     Object? createdAt = freezed,
+    Object? autoDeleteAt = freezed,
     Object? isDone = null,
   }) {
     return _then(_value.copyWith(
@@ -80,6 +83,10 @@ class _$TodoNoteCopyWithImpl<$Res, $Val extends TodoNote>
       createdAt: freezed == createdAt
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
+      autoDeleteAt: freezed == autoDeleteAt
+          ? _value.autoDeleteAt
+          : autoDeleteAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
       isDone: null == isDone
           ? _value.isDone
@@ -102,6 +109,7 @@ abstract class _$$TodoNoteImplCopyWith<$Res>
       String title,
       List<TodoNote> children,
       DateTime? createdAt,
+      DateTime? autoDeleteAt,
       bool isDone});
 }
 
@@ -120,6 +128,7 @@ class __$$TodoNoteImplCopyWithImpl<$Res>
     Object? title = null,
     Object? children = null,
     Object? createdAt = freezed,
+    Object? autoDeleteAt = freezed,
     Object? isDone = null,
   }) {
     return _then(_$TodoNoteImpl(
@@ -139,6 +148,10 @@ class __$$TodoNoteImplCopyWithImpl<$Res>
           ? _value.createdAt
           : createdAt // ignore: cast_nullable_to_non_nullable
               as DateTime?,
+      autoDeleteAt: freezed == autoDeleteAt
+          ? _value.autoDeleteAt
+          : autoDeleteAt // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       isDone: null == isDone
           ? _value.isDone
           : isDone // ignore: cast_nullable_to_non_nullable
@@ -155,6 +168,7 @@ class _$TodoNoteImpl with DiagnosticableTreeMixin implements _TodoNote {
       required this.title,
       required final List<TodoNote> children,
       required this.createdAt,
+      required this.autoDeleteAt,
       required this.isDone})
       : _children = children;
 
@@ -176,11 +190,13 @@ class _$TodoNoteImpl with DiagnosticableTreeMixin implements _TodoNote {
   @override
   final DateTime? createdAt;
   @override
+  final DateTime? autoDeleteAt;
+  @override
   final bool isDone;
 
   @override
   String toString({DiagnosticLevel minLevel = DiagnosticLevel.info}) {
-    return 'TodoNote(id: $id, title: $title, children: $children, createdAt: $createdAt, isDone: $isDone)';
+    return 'TodoNote(id: $id, title: $title, children: $children, createdAt: $createdAt, autoDeleteAt: $autoDeleteAt, isDone: $isDone)';
   }
 
   @override
@@ -192,6 +208,7 @@ class _$TodoNoteImpl with DiagnosticableTreeMixin implements _TodoNote {
       ..add(DiagnosticsProperty('title', title))
       ..add(DiagnosticsProperty('children', children))
       ..add(DiagnosticsProperty('createdAt', createdAt))
+      ..add(DiagnosticsProperty('autoDeleteAt', autoDeleteAt))
       ..add(DiagnosticsProperty('isDone', isDone));
   }
 
@@ -205,13 +222,21 @@ class _$TodoNoteImpl with DiagnosticableTreeMixin implements _TodoNote {
             const DeepCollectionEquality().equals(other._children, _children) &&
             (identical(other.createdAt, createdAt) ||
                 other.createdAt == createdAt) &&
+            (identical(other.autoDeleteAt, autoDeleteAt) ||
+                other.autoDeleteAt == autoDeleteAt) &&
             (identical(other.isDone, isDone) || other.isDone == isDone));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, id, title,
-      const DeepCollectionEquality().hash(_children), createdAt, isDone);
+  int get hashCode => Object.hash(
+      runtimeType,
+      id,
+      title,
+      const DeepCollectionEquality().hash(_children),
+      createdAt,
+      autoDeleteAt,
+      isDone);
 
   @JsonKey(ignore: true)
   @override
@@ -233,6 +258,7 @@ abstract class _TodoNote implements TodoNote {
       required final String title,
       required final List<TodoNote> children,
       required final DateTime? createdAt,
+      required final DateTime? autoDeleteAt,
       required final bool isDone}) = _$TodoNoteImpl;
 
   factory _TodoNote.fromJson(Map<String, dynamic> json) =
@@ -246,6 +272,8 @@ abstract class _TodoNote implements TodoNote {
   List<TodoNote> get children;
   @override
   DateTime? get createdAt;
+  @override
+  DateTime? get autoDeleteAt;
   @override
   bool get isDone;
   @override

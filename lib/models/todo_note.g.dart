@@ -16,6 +16,9 @@ _$TodoNoteImpl _$$TodoNoteImplFromJson(Map<String, dynamic> json) =>
       createdAt: json['createdAt'] == null
           ? null
           : DateTime.parse(json['createdAt'] as String),
+      autoDeleteAt: json['autoDeleteAt'] == null
+          ? null
+          : DateTime.parse(json['autoDeleteAt'] as String),
       isDone: json['isDone'] as bool,
     );
 
@@ -25,5 +28,6 @@ Map<String, dynamic> _$$TodoNoteImplToJson(_$TodoNoteImpl instance) =>
       'title': instance.title,
       'children': instance.children,
       'createdAt': instance.createdAt?.toIso8601String(),
+      'autoDeleteAt': instance.autoDeleteAt?.toIso8601String(),
       'isDone': instance.isDone,
     };
